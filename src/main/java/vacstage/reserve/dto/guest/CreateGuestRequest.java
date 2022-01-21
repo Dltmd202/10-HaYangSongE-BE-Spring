@@ -3,6 +3,8 @@ package vacstage.reserve.dto.guest;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
 @AllArgsConstructor
 public class CreateGuestRequest{
@@ -11,11 +13,11 @@ public class CreateGuestRequest{
 
     private String username;
 
-    private String vaccine_step;
+    private int vaccine_step;
 
     private String password;
 
-    private String photo;
+    private LocalDateTime vaccine_date;
 
     private String phone_number;
 }
