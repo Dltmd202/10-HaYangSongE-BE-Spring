@@ -2,6 +2,7 @@ package vacstage.reserve.domain;
 
 import lombok.Getter;
 import lombok.Setter;
+import vacstage.reserve.dto.guest.CreateGuestRequest;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -40,4 +41,16 @@ public class Guest {
     private Boolean isStaff;
 
     private Boolean isHost;
+
+    //==생성 메서드==//
+    public static Guest createGuestByRequest(CreateGuestRequest request) {
+        Guest guest = new Guest();
+        guest.setUsername(request.getUsername());
+        guest.setFullName(request.getFull_name());
+        guest.setPassword(request.getPassword());
+        guest.setVaccineStep(request.getVaccine_step());
+        guest.setVaccineDate(request.getVaccine_date());
+        guest.setPhoneNumber(request.getPhone_number());
+        return guest;
+    }
 }
