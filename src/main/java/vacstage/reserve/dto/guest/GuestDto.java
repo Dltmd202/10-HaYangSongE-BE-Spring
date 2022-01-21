@@ -1,4 +1,4 @@
-package vacstage.reserve.dto;
+package vacstage.reserve.dto.guest;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
