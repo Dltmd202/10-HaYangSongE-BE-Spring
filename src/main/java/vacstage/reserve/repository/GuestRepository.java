@@ -1,13 +1,19 @@
 package vacstage.reserve.repository;
 
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import vacstage.reserve.domain.Guest;
+import org.springframework.util.StringUtils;
+import vacstage.reserve.domain.guest.Guest;
+import vacstage.reserve.domain.guest.GuestSearch;
+import vacstage.reserve.domain.guest.QGuest;
 
 import javax.persistence.EntityManager;
-import java.lang.reflect.Member;
 import java.util.List;
+
+import static vacstage.reserve.domain.guest.QGuest.guest;
+
 
 @Repository
 @RequiredArgsConstructor
@@ -23,14 +29,24 @@ public class GuestRepository {
         return em.find(Guest.class, id);
     }
 
-    public List<Guest> findByFullUsername(String username){
-        return em.createQuery(
-                "select guest from Guest guest" +
-                        " where guest.username = :username", Guest.class)
-                .setParameter("username", username)
-                .getResultList();
+
+    public List<Guest> findAll(GuestSearch guestSearch) {
+        QGuest quest = guest;
+
+
+        JPAQueryFactory query = new JPAQueryFactory(em);
+        return query
+                .select(guest)
+                .from(guest)
+                .where(usernameLike(guestSearch.getUsername()))
+                .limit(1000)
+                .fetch();
     }
 
-
-
+    private BooleanExpression usernameLike(String username) {
+        if(!StringUtils.hasText(username)){
+            return null;
+        }
+        return guest.username.like(username);
+    }
 }
