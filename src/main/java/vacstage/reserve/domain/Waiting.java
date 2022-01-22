@@ -2,6 +2,7 @@ package vacstage.reserve.domain;
 
 import lombok.Getter;
 import lombok.Setter;
+import vacstage.reserve.domain.guest.Guest;
 
 import javax.persistence.*;
 

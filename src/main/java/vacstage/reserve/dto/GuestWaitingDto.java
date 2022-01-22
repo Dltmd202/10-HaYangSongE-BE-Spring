@@ -1,7 +1,7 @@
 package vacstage.reserve.dto;
 
 import lombok.*;
-import vacstage.reserve.domain.Guest;
+import vacstage.reserve.domain.guest.Guest;
 import vacstage.reserve.domain.Waiting;
 
 
