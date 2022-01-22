@@ -13,15 +13,15 @@ public class WaitingRepository {
 
     private final EntityManager em;
 
-    private void save(Waiting waiting){
+    public void save(Waiting waiting){
         em.persist(waiting);
     }
 
-    private Waiting findById(Long id){
+    public Waiting findById(Long id){
         return em.find(Waiting.class, id);
     }
 
-    private List<Waiting> findAll(){
+    public List<Waiting> findAll(){
         return em.createQuery("select w from Waiting w", Waiting.class)
                 .getResultList();
     }
