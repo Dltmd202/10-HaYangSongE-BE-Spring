@@ -1,25 +1,44 @@
 package vacstage.reserve.api;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
-import vacstage.reserve.domain.Guest;
-import vacstage.reserve.repository.GuestRepository;
+import org.springframework.web.bind.annotation.*;
+import vacstage.reserve.domain.guest.Guest;
+import vacstage.reserve.domain.guest.GuestSearch;
+import vacstage.reserve.dto.guest.CreateGuestRequest;
+import vacstage.reserve.dto.guest.CreateGuestResponse;
+import vacstage.reserve.dto.guest.GuestDto;
+import vacstage.reserve.service.GuestService;
 
-import java.util.ArrayList;
+import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
 public class GuestAPIController {
 
-    private final GuestRepository guestRepository;
+    private final GuestService guestService;
+
+    @GetMapping("/guest/{id}")
+    public GuestDto find(@PathVariable("id") Long id) {
+        Guest guest  = guestService.findOne(id);
+        return new GuestDto(guest);
+    }
+
+    @PostMapping("/guest")
+    public CreateGuestResponse signUp(
+            @RequestBody @Valid CreateGuestRequest request){
+        Guest guest = Guest.createGuestByRequest(request);
+        guestService.join(guest);
+        return new CreateGuestResponse(guest);
+    }
 
     @GetMapping("/guest")
-    public List<Guest> guests(){
-        List<Guest> guests = new ArrayList<>();
-        return guests;
+    public List<GuestDto> list(){
+        List<Guest> guests = guestService.findGuests(new GuestSearch());
+        return guests.stream()
+                .map(GuestDto::new)
+                .collect(Collectors.toList());
     }
 
 
