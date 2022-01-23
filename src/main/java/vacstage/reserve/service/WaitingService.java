@@ -26,6 +26,10 @@ public class WaitingService {
     private final RestaurantRepository restaurantRepository;
     private final WaitingRepository waitingRepository;
 
+    public Waiting findOne(Long id){
+        return waitingRepository.findById(id);
+    }
+
     /*
      * 웨이팅 등록
      */
