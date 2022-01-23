@@ -2,6 +2,8 @@ package vacstage.reserve.domain;
 
 import lombok.Getter;
 import lombok.Setter;
+import vacstage.reserve.domain.guest.Guest;
+import vacstage.reserve.domain.waiting.Waiting;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -29,15 +31,15 @@ public class Restaurant {
 
     private String detailAddress;
 
-    private String waitingAverage;
+    private int waitingAverage;
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
-    private List<RestaurantMenu> restaurantMenu = new ArrayList<>();
+    private List<Menu> menus = new ArrayList<>();
 
     private String restaurantPhoto;
 
     @OneToMany(mappedBy = "restaurant")
-    private List<Acceptation> acceptation;
+    private List<Acceptation> acceptation = new ArrayList<>();
 
     @OneToMany(mappedBy = "restaurant")
     private List<Waiting> waitings = new ArrayList<>();
@@ -47,6 +49,44 @@ public class Restaurant {
     private int totalSeat;
 
     private int remainSeat;
+
+    public void setHost(Guest guest){
+        this.host = guest;
+        guest.setIsHost(true);
+    }
+
+    public void addMenu(Menu menu){
+        menu.setRestaurant(this);
+        menus.add(menu);
+    }
+
+    public void registerWaiting(Waiting waiting){
+        waiting.setRestaurant(this);
+        waitings.add(waiting);
+    }
+
+    /*
+     * 생성 메서드
+     */
+    public static Restaurant createBaseRestaurant(Guest guest, List<Menu> menus){
+        Restaurant restaurant = new Restaurant();
+        restaurant.setHost(guest);
+        guest.setIsHost(true);
+        for(Menu menu: menus){
+            restaurant.addMenu(menu);
+        }
+        return restaurant;
+    }
+
+    public static Restaurant createBaseRestaurant(Guest guest, Menu... menus){
+        Restaurant restaurant = new Restaurant();
+        restaurant.setHost(guest);
+        guest.setIsHost(true);
+        for(Menu menu: menus){
+            restaurant.addMenu(menu);
+        }
+        return restaurant;
+    }
 
 
 }
