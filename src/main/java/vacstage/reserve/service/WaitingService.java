@@ -7,6 +7,7 @@ import vacstage.reserve.domain.GuestWaiting;
 import vacstage.reserve.domain.Restaurant;
 import vacstage.reserve.domain.Waiting;
 import vacstage.reserve.domain.guest.Guest;
+import vacstage.reserve.exception.GuestAlreadyHaveWaiting;
 import vacstage.reserve.exception.NotAcceptableVaccineStep;
 import vacstage.reserve.repository.GuestRepository;
 import vacstage.reserve.repository.RestaurantRepository;
@@ -35,6 +36,7 @@ public class WaitingService {
         Restaurant restaurant = restaurantRepository.findById(restaurantId);
         Guest leader = guestRepository.findById(leaderId);
         validateGuestVaccineStep(restaurant, leader);
+        validateGuestAlreadyHaveWaiting(leader);
 
         List<Guest> members = memberIds.stream()
                 .map(guestRepository::findById)
@@ -42,6 +44,7 @@ public class WaitingService {
 
         for (Guest member : members) {
             validateGuestVaccineStep(restaurant, member);
+            validateGuestAlreadyHaveWaiting(member);
         }
 
         List<GuestWaiting> guestWaitings = members.stream()
@@ -60,11 +63,13 @@ public class WaitingService {
         Restaurant restaurant = restaurantRepository.findById(restaurantId);
         Guest leader = guestRepository.findById(leaderId);
         validateGuestVaccineStep(restaurant, leader);
+        validateGuestAlreadyHaveWaiting(leader);
 
         List<Guest> members = new ArrayList<>();
         for (Long memberId: memberIds){
             Guest member = guestRepository.findById(memberId);
             validateGuestVaccineStep(restaurant, member);
+            validateGuestAlreadyHaveWaiting(member);
             members.add(member);
         }
 
@@ -83,6 +88,12 @@ public class WaitingService {
         System.out.println(guest.getVaccineElapsed());
         if(restaurant.getVaccineCondition() > applyingVaccineStep){
             throw new NotAcceptableVaccineStep("백신 조건이 맞지 않습니다.");
+        }
+    }
+
+    private void validateGuestAlreadyHaveWaiting(Guest guest){
+        if(guest.getCurrentWaiting() != null){
+            throw new GuestAlreadyHaveWaiting("게스트가 이미 웨이팅을 가지고있습니다.");
         }
     }
 
