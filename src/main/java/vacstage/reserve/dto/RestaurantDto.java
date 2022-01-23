@@ -1,9 +1,9 @@
 package vacstage.reserve.dto;
 
 import vacstage.reserve.domain.Acceptation;
-import vacstage.reserve.domain.guest.Guest;
-import vacstage.reserve.domain.RestaurantMenu;
+import vacstage.reserve.domain.Menu;
 import vacstage.reserve.domain.Waiting;
+import vacstage.reserve.domain.guest.Guest;
 
 import java.util.List;
 
@@ -25,7 +25,7 @@ public class RestaurantDto {
 
     private String waitingAverage;
 
-    private List<RestaurantMenu> restaurantMenu;
+    private List<Menu> menus;
 
     private String restaurantPhoto;
 

@@ -33,7 +33,7 @@ public class Restaurant {
     private String waitingAverage;
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
-    private List<RestaurantMenu> restaurantMenu = new ArrayList<>();
+    private List<Menu> menus = new ArrayList<>();
 
     private String restaurantPhoto;
 
@@ -48,6 +48,16 @@ public class Restaurant {
     private int totalSeat;
 
     private int remainSeat;
+
+    public void setHost(Guest guest){
+        this.host = guest;
+        guest.setIsHost(true);
+    }
+
+    public void addMenu(Menu menu){
+        menu.setRestaurant(this);
+        menus.add(menu);
+    }
 
 
 }
