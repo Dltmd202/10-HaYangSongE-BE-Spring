@@ -31,7 +31,10 @@ public class Guest {
     private int vaccineStep;
 
     @OneToMany(mappedBy = "guest", cascade = CascadeType.ALL)
-    private List<GuestWaiting> waitings = new ArrayList<>();
+    private List<GuestWaiting> guestWaiting = new ArrayList<>();
+
+    @OneToMany(mappedBy = "leader")
+    private List<Waiting> leading = new ArrayList<>();
 
     @OneToOne
     @JoinColumn(name = "waiting_id")
@@ -44,6 +47,18 @@ public class Guest {
     private Boolean isStaff;
 
     private Boolean isHost;
+
+
+    public void joinWaiting(GuestWaiting guestWaiting){
+        this.guestWaiting.add(guestWaiting);
+        guestWaiting.getWaiting().getMember().add(guestWaiting);
+        currentWaiting = guestWaiting.getWaiting();
+    }
+
+    public void hostWaiting(Waiting waiting){
+        leading.add(waiting);
+        waiting.setLeader(this);
+    }
 
     //==생성 메서드==//
     public static Guest createGuestByRequest(CreateGuestRequest request) {
