@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
+import vacstage.reserve.constant.WaitingStatus;
 import vacstage.reserve.domain.Restaurant;
 import vacstage.reserve.domain.guest.Guest;
 import vacstage.reserve.domain.waiting.Waiting;
@@ -15,7 +16,8 @@ import vacstage.reserve.repository.WaitingRepository;
 
 import java.time.LocalDateTime;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -54,7 +56,7 @@ public class WaitingServiceTest {
 
         //then
         Waiting findWaiting = waitingRepository.findById(waitingId);
-        assertFalse(findWaiting.getAccepted());
+        assertEquals(findWaiting.getWaitingStatus(), WaitingStatus.WAITING);
         assertEquals(findWaiting.getLeader(), leader);
         assertEquals(findWaiting.getMember().get(0).getGuest(), guest1);
         assertEquals(findWaiting.getMember().get(1).getGuest(), guest2);

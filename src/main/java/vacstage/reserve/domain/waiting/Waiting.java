@@ -2,6 +2,7 @@ package vacstage.reserve.domain.waiting;
 
 import lombok.Getter;
 import lombok.Setter;
+import vacstage.reserve.constant.WaitingStatus;
 import vacstage.reserve.domain.GuestWaiting;
 import vacstage.reserve.domain.Restaurant;
 import vacstage.reserve.domain.guest.Guest;
@@ -32,7 +33,8 @@ public class Waiting {
     @OneToMany(mappedBy = "waiting", cascade = CascadeType.ALL)
     private List<GuestWaiting> member = new ArrayList<>();
 
-    private Boolean accepted;
+    @Enumerated(EnumType.STRING)
+    private WaitingStatus waitingStatus;
 
     private LocalDateTime date;
 
@@ -40,7 +42,7 @@ public class Waiting {
             Restaurant restaurant, Guest leader, List<GuestWaiting> guestWaitings){
 
         Waiting waiting = new Waiting();
-        waiting.setAccepted(false);
+        waiting.setWaitingStatus(WaitingStatus.WAITING);
         waiting.setDate(LocalDateTime.now());
         waiting.setRestaurant(restaurant);
         leader.hostWaiting(waiting);
