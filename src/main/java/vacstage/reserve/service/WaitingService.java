@@ -7,6 +7,7 @@ import vacstage.reserve.domain.GuestWaiting;
 import vacstage.reserve.domain.Restaurant;
 import vacstage.reserve.domain.Waiting;
 import vacstage.reserve.domain.guest.Guest;
+import vacstage.reserve.exception.NotAcceptableVaccineStep;
 import vacstage.reserve.repository.GuestRepository;
 import vacstage.reserve.repository.RestaurantRepository;
 import vacstage.reserve.repository.WaitingRepository;
@@ -33,15 +34,22 @@ public class WaitingService {
     {
         Restaurant restaurant = restaurantRepository.findById(restaurantId);
         Guest leader = guestRepository.findById(leaderId);
+        validateGuestVaccineStep(restaurant, leader);
+
         List<Guest> members = memberIds.stream()
                 .map(guestRepository::findById)
                 .collect(Collectors.toList());
+
+        for (Guest member : members) {
+            validateGuestVaccineStep(restaurant, member);
+        }
 
         List<GuestWaiting> guestWaitings = members.stream()
                 .map(GuestWaiting::createGuestWaiting)
                 .collect(Collectors.toList());
 
         Waiting waiting = Waiting.createWaiting(restaurant, leader, guestWaitings);
+        waitingRepository.save(waiting);
         return waiting.getId();
     }
 
@@ -51,10 +59,12 @@ public class WaitingService {
     {
         Restaurant restaurant = restaurantRepository.findById(restaurantId);
         Guest leader = guestRepository.findById(leaderId);
+        validateGuestVaccineStep(restaurant, leader);
 
         List<Guest> members = new ArrayList<>();
         for (Long memberId: memberIds){
             Guest member = guestRepository.findById(memberId);
+            validateGuestVaccineStep(restaurant, member);
             members.add(member);
         }
 
@@ -66,6 +76,12 @@ public class WaitingService {
 
         waitingRepository.save(waiting);
         return waiting.getId();
+    }
+
+    private void validateGuestVaccineStep(Restaurant restaurant, Guest guest){
+        if(restaurant.getVaccineCondition() > guest.getVaccineStep()){
+            throw new NotAcceptableVaccineStep("백신 조건이 맞지 않습니다.");
+        }
     }
 
 }
