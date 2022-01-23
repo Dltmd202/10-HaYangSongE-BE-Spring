@@ -5,12 +5,11 @@ import lombok.Setter;
 import vacstage.reserve.domain.guest.Guest;
 
 import javax.persistence.*;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static javax.persistence.FetchType.*;
+import static javax.persistence.FetchType.LAZY;
 
 @Entity
 @Getter @Setter
@@ -34,5 +33,21 @@ public class Waiting {
     private Boolean accepted;
 
     private LocalDateTime date;
+
+    public static Waiting createWaiting(
+            Restaurant restaurant, Guest leader, List<GuestWaiting> guestWaitings){
+
+        Waiting waiting = new Waiting();
+        waiting.setAccepted(false);
+        waiting.setDate(LocalDateTime.now());
+        waiting.setRestaurant(restaurant);
+        leader.hostWaiting(waiting);
+        for (GuestWaiting guestWaiting : guestWaitings) {
+            guestWaiting.setWaiting(waiting);
+            guestWaiting.getGuest().joinWaiting(guestWaiting);
+        }
+        restaurant.registerWaiting(waiting);
+        return waiting;
+    }
 
 }

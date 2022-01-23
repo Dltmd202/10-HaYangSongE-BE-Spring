@@ -59,6 +59,11 @@ public class Restaurant {
         menus.add(menu);
     }
 
+    public void registerWaiting(Waiting waiting){
+        waiting.setRestaurant(this);
+        waitings.add(waiting);
+    }
+
     /*
      * 생성 메서드
      */
