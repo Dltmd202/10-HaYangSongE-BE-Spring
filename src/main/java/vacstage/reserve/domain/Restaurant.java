@@ -59,5 +59,28 @@ public class Restaurant {
         menus.add(menu);
     }
 
+    /*
+     * 생성 메서드
+     */
+    public static Restaurant createBaseRestaurant(Guest guest, List<Menu> menus){
+        Restaurant restaurant = new Restaurant();
+        restaurant.setHost(guest);
+        guest.setIsHost(true);
+        for(Menu menu: menus){
+            restaurant.addMenu(menu);
+        }
+        return restaurant;
+    }
+
+    public static Restaurant createBaseRestaurant(Guest guest, Menu... menus){
+        Restaurant restaurant = new Restaurant();
+        restaurant.setHost(guest);
+        guest.setIsHost(true);
+        for(Menu menu: menus){
+            restaurant.addMenu(menu);
+        }
+        return restaurant;
+    }
+
 
 }
