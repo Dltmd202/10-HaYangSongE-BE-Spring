@@ -21,4 +21,11 @@ public class Menu {
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
 
+    public static Menu createMenu(String name, int price){
+        Menu menu = new Menu();
+        menu.setName(name);
+        menu.setPrice(price);
+        return menu;
+    }
+
 }
