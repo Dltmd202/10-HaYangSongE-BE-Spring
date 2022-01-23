@@ -53,12 +53,13 @@ public class Guest {
     public void joinWaiting(GuestWaiting guestWaiting){
         this.guestWaiting.add(guestWaiting);
         guestWaiting.getWaiting().getMember().add(guestWaiting);
-        currentWaiting = guestWaiting.getWaiting();
+        setCurrentWaiting(guestWaiting.getWaiting());
     }
 
     public void hostWaiting(Waiting waiting){
         leading.add(waiting);
         waiting.setLeader(this);
+        setCurrentWaiting(waiting);
     }
 
     public int getVaccineElapsed(){
