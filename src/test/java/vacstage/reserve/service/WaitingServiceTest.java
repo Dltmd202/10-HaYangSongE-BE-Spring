@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import vacstage.reserve.domain.Restaurant;
 import vacstage.reserve.domain.Waiting;
 import vacstage.reserve.domain.guest.Guest;
+import vacstage.reserve.exception.GuestAlreadyHaveWaiting;
 import vacstage.reserve.exception.NotAcceptableVaccineStep;
 import vacstage.reserve.repository.WaitingRepository;
 
@@ -142,21 +143,37 @@ public class WaitingServiceTest {
         fail();
     }
 
-    @Test
+    @Test(expected = GuestAlreadyHaveWaiting.class)
     public void 이미_예약있는_게스트의_얘약() throws Exception{
         //given
+        Guest host1 = createGuest("admin1", 2, LocalDateTime.now().minusDays(21));
+        Restaurant restaurant1 = createRestaurant(host1, "맥도날드", 2);
+
+        Guest host2 = createGuest("admin1", 2, LocalDateTime.now().minusDays(21));
+        Restaurant restaurant2 = createRestaurant(host2, "버거킹", 1);
+
+        Guest leader = createGuest("leader", 2, LocalDateTime.now().minusDays(21));
+
+        Guest guest1 = createGuest("guest1", 2, LocalDateTime.now().minusDays(21));
+        Guest guest2 = createGuest("guest2", 2, LocalDateTime.now().minusDays(21));
+        Guest guest3 = createGuest("guest3", 2, LocalDateTime.now().minusDays(21));
+        Guest guest4 = createGuest("guest4", 2, LocalDateTime.now().minusDays(21));
 
         //when
+        guestService.join(leader);
+        guestService.join(guest1);
+        guestService.join(guest2);
+        guestService.join(guest3);
+        guestService.join(guest4);
 
-        //then
-        fail();
-    }
+        restaurantService.register(restaurant1);
+        restaurantService.register(restaurant2);
 
-    @Test
-    public void 백신조건_미달과_이미_예약의_예외_모두() throws Exception{
-        //given
+        Long waitingId1 = waitingService.waiting(
+                restaurant1.getId(), leader.getId(), guest1.getId(), guest2.getId(), guest3.getId());
 
-        //when
+        Long waitingId2 = waitingService.waiting(
+                restaurant2.getId(), leader.getId(), guest4.getId());
 
         //then
         fail();
