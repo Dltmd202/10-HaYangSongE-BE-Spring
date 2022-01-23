@@ -9,6 +9,7 @@ import vacstage.reserve.dto.guest.GuestDto;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,6 +59,11 @@ public class Guest {
     public void hostWaiting(Waiting waiting){
         leading.add(waiting);
         waiting.setLeader(this);
+    }
+
+    public int getVaccineElapsed(){
+        LocalDateTime now = LocalDateTime.now();
+        return (int)ChronoUnit.DAYS.between(vaccineDate, now);
     }
 
     //==생성 메서드==//

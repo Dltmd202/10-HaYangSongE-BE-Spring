@@ -79,7 +79,9 @@ public class WaitingService {
     }
 
     private void validateGuestVaccineStep(Restaurant restaurant, Guest guest){
-        if(restaurant.getVaccineCondition() > guest.getVaccineStep()){
+        int applyingVaccineStep = guest.getVaccineElapsed() >= 14 ? guest.getVaccineStep(): guest.getVaccineStep() - 1;
+        System.out.println(guest.getVaccineElapsed());
+        if(restaurant.getVaccineCondition() > applyingVaccineStep){
             throw new NotAcceptableVaccineStep("백신 조건이 맞지 않습니다.");
         }
     }
