@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import vacstage.reserve.domain.Restaurant;
 import vacstage.reserve.domain.Waiting;
 import vacstage.reserve.domain.guest.Guest;
+import vacstage.reserve.exception.NotAcceptableVaccineStep;
 import vacstage.reserve.repository.WaitingRepository;
 
 import static org.junit.Assert.*;
@@ -60,8 +61,60 @@ public class WaitingServiceTest {
 
     }
 
-    @Test
+    @Test(expected = NotAcceptableVaccineStep.class)
     public void 멤버_백신조건_미달() throws Exception{
+        //given
+        Guest host = createGuest("admin1", 2);
+        Restaurant restaurant = createRestaurant(host, "맥도날드", 2);
+
+        Guest leader = createGuest("leader", 2);
+
+        Guest guest1 = createGuest("guest1", 1);
+        Guest guest2 = createGuest("guest2", 2);
+        Guest guest3 = createGuest("guest3", 2);
+
+        //when
+        guestService.join(leader);
+        guestService.join(guest1);
+        guestService.join(guest2);
+        guestService.join(guest3);
+
+        restaurantService.register(restaurant);
+        Long waitingId = waitingService.waiting(
+                restaurant.getId(), leader.getId(), guest1.getId(), guest2.getId(), guest3.getId());
+
+        //then
+        fail();
+    }
+
+    @Test(expected = NotAcceptableVaccineStep.class)
+    public void 리더_백신조건_미달() throws Exception{
+        //given
+        Guest host = createGuest("admin1", 2);
+        Restaurant restaurant = createRestaurant(host, "맥도날드", 2);
+
+        Guest leader = createGuest("leader", 1);
+
+        Guest guest1 = createGuest("guest1", 2);
+        Guest guest2 = createGuest("guest2", 2);
+        Guest guest3 = createGuest("guest3", 2);
+
+        //when
+        guestService.join(leader);
+        guestService.join(guest1);
+        guestService.join(guest2);
+        guestService.join(guest3);
+
+        restaurantService.register(restaurant);
+        Long waitingId = waitingService.waiting(
+                restaurant.getId(), leader.getId(), guest1.getId(), guest2.getId(), guest3.getId());
+
+        //then
+        fail();
+    }
+
+    @Test
+    public void 이미_예약있는_게스트의_얘약() throws Exception{
         //given
 
         //when
@@ -71,7 +124,7 @@ public class WaitingServiceTest {
     }
 
     @Test
-    public void 이미_예약있는_게스트의_얘약() throws Exception{
+    public void 백신조건_미달과_이미_예약의_예외_모두() throws Exception{
         //given
 
         //when
