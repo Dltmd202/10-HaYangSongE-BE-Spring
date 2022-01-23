@@ -12,6 +12,8 @@ import vacstage.reserve.domain.guest.Guest;
 import vacstage.reserve.exception.NotAcceptableVaccineStep;
 import vacstage.reserve.repository.WaitingRepository;
 
+import java.time.LocalDateTime;
+
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
@@ -30,14 +32,14 @@ public class WaitingServiceTest {
     @Test
     public void 웨이팅_등록() throws Exception{
         //given
-        Guest host = createGuest("admin1", 2);
+        Guest host = createGuest("admin1", 2, LocalDateTime.now().minusDays(13));
         Restaurant restaurant = createRestaurant(host, "맥도날드", 1);
 
-        Guest leader = createGuest("leader", 2);
+        Guest leader = createGuest("leader", 2, LocalDateTime.now().minusDays(13));
 
-        Guest guest1 = createGuest("guest1", 2);
-        Guest guest2 = createGuest("guest2", 2);
-        Guest guest3 = createGuest("guest3", 2);
+        Guest guest1 = createGuest("guest1", 2, LocalDateTime.now().minusDays(13));
+        Guest guest2 = createGuest("guest2", 2, LocalDateTime.now().minusDays(13));
+        Guest guest3 = createGuest("guest3", 2, LocalDateTime.now().minusDays(13));
 
         //when
         guestService.join(leader);
@@ -64,14 +66,14 @@ public class WaitingServiceTest {
     @Test(expected = NotAcceptableVaccineStep.class)
     public void 멤버_백신조건_미달() throws Exception{
         //given
-        Guest host = createGuest("admin1", 2);
+        Guest host = createGuest("admin1", 2, LocalDateTime.now().minusDays(21));
         Restaurant restaurant = createRestaurant(host, "맥도날드", 2);
 
-        Guest leader = createGuest("leader", 2);
+        Guest leader = createGuest("leader", 2, LocalDateTime.now().minusDays(21));
 
-        Guest guest1 = createGuest("guest1", 1);
-        Guest guest2 = createGuest("guest2", 2);
-        Guest guest3 = createGuest("guest3", 2);
+        Guest guest1 = createGuest("guest1", 1, LocalDateTime.now().minusDays(21));
+        Guest guest2 = createGuest("guest2", 2, LocalDateTime.now().minusDays(21));
+        Guest guest3 = createGuest("guest3", 2, LocalDateTime.now().minusDays(21));
 
         //when
         guestService.join(leader);
@@ -90,14 +92,41 @@ public class WaitingServiceTest {
     @Test(expected = NotAcceptableVaccineStep.class)
     public void 리더_백신조건_미달() throws Exception{
         //given
-        Guest host = createGuest("admin1", 2);
+        Guest host = createGuest("admin1", 2, LocalDateTime.now().minusDays(21));
         Restaurant restaurant = createRestaurant(host, "맥도날드", 2);
 
-        Guest leader = createGuest("leader", 1);
+        Guest leader = createGuest("leader", 1, LocalDateTime.now().minusDays(21));
+        leader.setVaccineDate(LocalDateTime.now().minusDays(21));
 
-        Guest guest1 = createGuest("guest1", 2);
-        Guest guest2 = createGuest("guest2", 2);
-        Guest guest3 = createGuest("guest3", 2);
+        Guest guest1 = createGuest("guest1", 2, LocalDateTime.now().minusDays(21));
+        Guest guest2 = createGuest("guest2", 2, LocalDateTime.now().minusDays(21));
+        Guest guest3 = createGuest("guest3", 2, LocalDateTime.now().minusDays(21));
+
+        //when
+        guestService.join(leader);
+        guestService.join(guest1);
+        guestService.join(guest2);
+        guestService.join(guest3);
+
+        restaurantService.register(restaurant);
+        Long waitingId = waitingService.waiting(
+                restaurant.getId(), leader.getId(), guest1.getId(), guest2.getId(), guest3.getId());
+
+        //then
+        fail();
+    }
+
+    @Test(expected = NotAcceptableVaccineStep.class)
+    public void 백신_날짜_조건_미달() throws Exception{
+        //given
+        Guest host = createGuest("admin1", 2, LocalDateTime.now().minusDays(21));
+        Restaurant restaurant = createRestaurant(host, "맥도날드", 2);
+
+        Guest leader = createGuest("leader", 2, LocalDateTime.now().minusDays(21));
+
+        Guest guest1 = createGuest("guest1", 2, LocalDateTime.now().minusDays(21));
+        Guest guest2 = createGuest("guest2", 2, LocalDateTime.now().minusDays(21));
+        Guest guest3 = createGuest("guest3", 2, LocalDateTime.now().minusDays(13));
 
         //when
         guestService.join(leader);
@@ -143,13 +172,14 @@ public class WaitingServiceTest {
         fail();
     }
 
-    private Guest createGuest(String username, int vaccineStep) {
+    private Guest createGuest(String username, int vaccineStep, LocalDateTime vaccineDate) {
         Guest guest = new Guest();
         guest.setUsername(username);
         guest.setFullName("이승환");
         guest.setVaccineStep(vaccineStep);
         guest.setPassword("1234");
         guest.setPhoneNumber("010-1234-1234");
+        guest.setVaccineDate(vaccineDate);
         return guest;
     }
 
