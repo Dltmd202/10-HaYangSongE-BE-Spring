@@ -56,10 +56,32 @@ public class WaitingServiceTest {
         assertEquals(findWaiting.getMember().get(1).getGuest(), guest2);
         assertEquals(findWaiting.getMember().get(2).getGuest(), guest3);
 
+        assertEquals(restaurant.getWaitings().get(0), findWaiting);
+
     }
 
     @Test
     public void 멤버_백신조건_미달() throws Exception{
+        //given
+
+        //when
+
+        //then
+        fail();
+    }
+
+    @Test
+    public void 이미_예약있는_게스트의_얘약() throws Exception{
+        //given
+
+        //when
+
+        //then
+        fail();
+    }
+
+    @Test
+    public void 예약_수락() throws Exception{
         //given
 
         //when
