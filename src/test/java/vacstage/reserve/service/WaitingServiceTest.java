@@ -33,14 +33,14 @@ public class WaitingServiceTest {
     @Test
     public void 웨이팅_등록() throws Exception{
         //given
-        Guest host = createGuest("admin1", 2, LocalDateTime.now().minusDays(13));
+        Guest host = createGuest("admin1", 2, LocalDateTime.now().minusDays(21));
         Restaurant restaurant = createRestaurant(host, "맥도날드", 1);
 
-        Guest leader = createGuest("leader", 2, LocalDateTime.now().minusDays(13));
+        Guest leader = createGuest("leader", 2, LocalDateTime.now().minusDays(21));
 
-        Guest guest1 = createGuest("guest1", 2, LocalDateTime.now().minusDays(13));
-        Guest guest2 = createGuest("guest2", 2, LocalDateTime.now().minusDays(13));
-        Guest guest3 = createGuest("guest3", 2, LocalDateTime.now().minusDays(13));
+        Guest guest1 = createGuest("guest1", 2, LocalDateTime.now().minusDays(21));
+        Guest guest2 = createGuest("guest2", 2, LocalDateTime.now().minusDays(21));
+        Guest guest3 = createGuest("guest3", 2, LocalDateTime.now().minusDays(21));
 
         //when
         guestService.join(leader);
@@ -174,16 +174,6 @@ public class WaitingServiceTest {
 
         Long waitingId2 = waitingService.waiting(
                 restaurant2.getId(), leader.getId(), guest4.getId());
-
-        //then
-        fail();
-    }
-
-    @Test
-    public void 예약_수락() throws Exception{
-        //given
-
-        //when
 
         //then
         fail();
