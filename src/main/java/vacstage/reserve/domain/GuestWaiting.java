@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import vacstage.reserve.domain.guest.Guest;
+import vacstage.reserve.domain.waiting.Waiting;
 
 import javax.persistence.*;
 

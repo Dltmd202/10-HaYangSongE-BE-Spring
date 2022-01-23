@@ -1,7 +1,9 @@
-package vacstage.reserve.domain;
+package vacstage.reserve.domain.waiting;
 
 import lombok.Getter;
 import lombok.Setter;
+import vacstage.reserve.domain.GuestWaiting;
+import vacstage.reserve.domain.Restaurant;
 import vacstage.reserve.domain.guest.Guest;
 
 import javax.persistence.*;

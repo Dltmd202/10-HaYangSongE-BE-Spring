@@ -2,7 +2,7 @@ package vacstage.reserve.repository;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import vacstage.reserve.domain.Waiting;
+import vacstage.reserve.domain.waiting.Waiting;
 
 import javax.persistence.EntityManager;
 import java.util.List;

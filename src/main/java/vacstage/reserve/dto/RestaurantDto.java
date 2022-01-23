@@ -2,8 +2,8 @@ package vacstage.reserve.dto;
 
 import vacstage.reserve.domain.Acceptation;
 import vacstage.reserve.domain.Menu;
-import vacstage.reserve.domain.Waiting;
 import vacstage.reserve.domain.guest.Guest;
+import vacstage.reserve.domain.waiting.Waiting;
 
 import java.util.List;
 

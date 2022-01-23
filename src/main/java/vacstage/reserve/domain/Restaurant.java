@@ -3,6 +3,7 @@ package vacstage.reserve.domain;
 import lombok.Getter;
 import lombok.Setter;
 import vacstage.reserve.domain.guest.Guest;
+import vacstage.reserve.domain.waiting.Waiting;
 
 import javax.persistence.*;
 import java.util.ArrayList;

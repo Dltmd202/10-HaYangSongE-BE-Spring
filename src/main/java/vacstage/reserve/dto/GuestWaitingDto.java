@@ -1,8 +1,9 @@
 package vacstage.reserve.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import vacstage.reserve.domain.guest.Guest;
-import vacstage.reserve.domain.Waiting;
+import vacstage.reserve.domain.waiting.Waiting;
 
 
 @Data

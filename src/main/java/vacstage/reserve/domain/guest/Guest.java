@@ -3,7 +3,7 @@ package vacstage.reserve.domain.guest;
 import lombok.Getter;
 import lombok.Setter;
 import vacstage.reserve.domain.GuestWaiting;
-import vacstage.reserve.domain.Waiting;
+import vacstage.reserve.domain.waiting.Waiting;
 import vacstage.reserve.dto.guest.CreateGuestRequest;
 import vacstage.reserve.dto.guest.GuestDto;
 
