@@ -221,14 +221,4 @@ public class GuestServiceTest {
         guestService.update(guest1.getId(), guestUpdateDto);
     }
 
-    @Test
-    public void 백신_접종_경과일() throws Exception{
-        //given
-
-        //when
-
-        //then
-        fail();
-    }
-
 }
