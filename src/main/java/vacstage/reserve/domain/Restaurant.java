@@ -30,7 +30,7 @@ public class Restaurant {
 
     private String detailAddress;
 
-    private String waitingAverage;
+    private int waitingAverage;
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
     private List<Menu> menus = new ArrayList<>();
@@ -38,7 +38,7 @@ public class Restaurant {
     private String restaurantPhoto;
 
     @OneToMany(mappedBy = "restaurant")
-    private List<Acceptation> acceptation;
+    private List<Acceptation> acceptation = new ArrayList<>();
 
     @OneToMany(mappedBy = "restaurant")
     private List<Waiting> waitings = new ArrayList<>();
