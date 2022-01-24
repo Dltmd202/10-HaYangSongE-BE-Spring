@@ -27,7 +27,8 @@ public class Restaurant {
 
     private String branchName;
 
-    private String district;
+    @Enumerated(EnumType.STRING)
+    private District district;
 
     private String detailAddress;
 
