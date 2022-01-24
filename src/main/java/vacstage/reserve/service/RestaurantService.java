@@ -9,6 +9,7 @@ import vacstage.reserve.domain.Restaurant;
 import vacstage.reserve.domain.waiting.Waiting;
 import vacstage.reserve.domain.waiting.WaitingSearch;
 import vacstage.reserve.exception.NoWaitingToAccept;
+import vacstage.reserve.repository.AcceptationRepository;
 import vacstage.reserve.repository.RestaurantRepository;
 import vacstage.reserve.repository.WaitingRepository;
 
@@ -23,6 +24,8 @@ public class RestaurantService {
     private final RestaurantRepository restaurantRepository;
 
     private final WaitingRepository waitingRepository;
+
+    private final AcceptationRepository acceptationRepository;
 
     @Transactional
     public Long register(Restaurant restaurant){
@@ -42,12 +45,14 @@ public class RestaurantService {
      * 가장 최근의 웨이팅 수락
      */
     @Transactional
-    public void acceptWaiting(Long restaurantId){
+    public Long acceptWaiting(Long restaurantId){
         Restaurant restaurant = restaurantRepository.findById(restaurantId);
         WaitingSearch waitingSearch = createAcceptSearchCondition(restaurantId, 1);
         List<Waiting> findWaiting = waitingRepository.findAll(waitingSearch);
         validateWaitingToAccept(findWaiting);
-        Acceptation.createAccept(restaurant, findWaiting.get(0));
+        Acceptation acceptation = Acceptation.createAccept(restaurant, findWaiting.get(0));
+        acceptationRepository.save(acceptation);
+        return acceptation.getId();
     }
 
     private WaitingSearch createAcceptSearchCondition(Long restaurantId, int limit) {
