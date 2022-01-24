@@ -39,6 +39,7 @@ public class GuestServiceTest {
         guest2.setVaccineStep(1);
         guest2.setPassword("4321");
         guest2.setPhoneNumber("010-1234-1234");
+        int originSize = guestService.findGuests(new GuestSearch()).size();
 
         //when
         Long saveId1 = guestService.join(guest1);
@@ -59,7 +60,7 @@ public class GuestServiceTest {
         assertNotEquals(guest1.getId(), guest2.getId());
 
 
-        assertEquals(guests.size(), 2);
+        assertEquals(guests.size(), originSize + 2);
 
         assertEquals(findGuest1.getUsername(), "admin1");
         assertEquals(findGuest1.getFullName(), "이승환");
@@ -147,6 +148,7 @@ public class GuestServiceTest {
         guest2.setPhoneNumber("010-1234-1234");
 
         GuestSearch guestSearch = new GuestSearch();
+        int originSize = guestService.findGuests(guestSearch).size();
 
         //when
         guestService.join(guest1);
@@ -155,7 +157,7 @@ public class GuestServiceTest {
         //then
 
         List<Guest> findGuests = guestService.findGuests(guestSearch);
-        assertEquals(findGuests.size(), 2);
+        assertEquals(findGuests.size(), 2 + originSize);
 
         guestSearch.setUsername("admin");
         List<Guest> findUsernameGuests = guestService.findGuests(guestSearch);
