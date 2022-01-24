@@ -2,6 +2,7 @@ package vacstage.reserve.domain;
 
 import lombok.Getter;
 import lombok.Setter;
+import vacstage.reserve.constant.District;
 import vacstage.reserve.domain.guest.Guest;
 import vacstage.reserve.domain.waiting.Waiting;
 
@@ -13,7 +14,10 @@ import java.util.List;
 @Getter @Setter
 public class Restaurant {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "restaurant_seq_generator"
+    )
     @Column(name = "restaurant_id")
     private Long id;
 

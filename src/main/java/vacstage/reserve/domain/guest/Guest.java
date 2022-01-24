@@ -17,7 +17,10 @@ import java.util.List;
 @Getter @Setter
 public class Guest {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "guest_seq_generator"
+    )
     @Column(name = "guest_id")
     private Long id;
 

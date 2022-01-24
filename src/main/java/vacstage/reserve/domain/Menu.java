@@ -9,7 +9,10 @@ import javax.persistence.*;
 @Getter @Setter
 public class Menu {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "menu_seq_generator"
+    )
     @Column(name = "menu_id")
     private Long id;
 
