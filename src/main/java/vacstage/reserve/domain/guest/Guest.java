@@ -2,10 +2,14 @@ package vacstage.reserve.domain.guest;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import vacstage.reserve.domain.GuestWaiting;
 import vacstage.reserve.domain.waiting.Waiting;
 import vacstage.reserve.dto.guest.CreateGuestRequest;
 import vacstage.reserve.dto.guest.GuestDto;
+import vacstage.reserve.exception.NotMatchPasswordException;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -71,6 +75,19 @@ public class Guest {
     public int getVaccineElapsed(){
         LocalDateTime now = LocalDateTime.now();
         return (int)ChronoUnit.DAYS.between(vaccineDate, now);
+    }
+
+    public void checkPassword(PasswordEncoder passwordEncoder, String credentials){
+        if (!passwordEncoder.matches(credentials, password)) {
+            throw new NotMatchPasswordException();
+        }
+    }
+
+    public List<GrantedAuthority> getAuthorities() {
+        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+        grantedAuthorities.add(new SimpleGrantedAuthority(Authority.USER.toString()));
+
+        return grantedAuthorities;
     }
 
     //==생성 메서드==//

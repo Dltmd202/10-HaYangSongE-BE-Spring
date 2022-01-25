@@ -4,6 +4,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import vacstage.reserve.domain.guest.Guest;
@@ -22,6 +23,7 @@ public class GuestServiceTest {
 
     @Autowired GuestService guestService;
     @Autowired GuestRepository guestRepository;
+    @Autowired PasswordEncoder passwordEncoder;
 
     @Test
     public void 회원가입() throws Exception{
@@ -65,13 +67,13 @@ public class GuestServiceTest {
         assertEquals(findGuest1.getUsername(), "admin1");
         assertEquals(findGuest1.getFullName(), "이승환");
         assertEquals(findGuest1.getVaccineStep(), 2);
-        assertEquals(findGuest1.getPassword(), "1234");
+        findGuest1.checkPassword(passwordEncoder,"1234");
         assertEquals(findGuest1.getPhoneNumber(), "010-1234-1234");
 
         assertEquals(findGuest2.getUsername(), "admin2");
         assertEquals(findGuest2.getFullName(), "이승환");
         assertEquals(findGuest2.getVaccineStep(), 1);
-        assertEquals(findGuest2.getPassword(), "4321");
+        findGuest2.checkPassword(passwordEncoder, "4321");
         assertEquals(findGuest2.getPhoneNumber(), "010-1234-1234");
 
 
