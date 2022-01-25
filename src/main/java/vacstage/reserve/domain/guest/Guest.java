@@ -52,6 +52,9 @@ public class Guest {
 
     private Boolean isHost;
 
+    @Enumerated(EnumType.STRING)
+    private Authority authority;
+
 
     public void joinWaiting(GuestWaiting guestWaiting){
         this.guestWaiting.add(guestWaiting);
