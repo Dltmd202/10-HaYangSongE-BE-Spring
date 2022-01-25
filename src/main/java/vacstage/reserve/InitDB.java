@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import vacstage.reserve.constant.District;
 import vacstage.reserve.domain.Menu;
 import vacstage.reserve.domain.Restaurant;
+import vacstage.reserve.domain.guest.Authority;
 import vacstage.reserve.domain.guest.Guest;
 
 import javax.annotation.PostConstruct;
@@ -51,7 +52,7 @@ public class InitDB {
                 guest.setIsStaff((Long) guestInformation.get("is_staff") == 1L);
                 guest.setFullName((String) guestInformation.get("full_name"));
                 guest.setIsHost((Long) guestInformation.get("is_host") == 1L);
-
+                guest.setAuthority(Authority.HOST);
                 em.persist(guest);
             }
 
