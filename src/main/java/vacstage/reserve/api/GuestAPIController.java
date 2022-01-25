@@ -1,5 +1,6 @@
 package vacstage.reserve.api;
 
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import vacstage.reserve.domain.guest.Guest;
@@ -19,6 +20,7 @@ public class GuestAPIController {
 
     private final GuestService guestService;
 
+    @Operation(summary = "게스트 탐색")
     @GetMapping("/guest/{id}")
     public GuestDto find(@PathVariable("id") Long id) {
         Guest guest  = guestService.findOne(id);
@@ -40,6 +42,7 @@ public class GuestAPIController {
                 .map(GuestDto::new)
                 .collect(Collectors.toList());
     }
+
 
 
 }

@@ -4,6 +4,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import vacstage.reserve.domain.guest.Guest;
@@ -22,6 +23,7 @@ public class GuestServiceTest {
 
     @Autowired GuestService guestService;
     @Autowired GuestRepository guestRepository;
+    @Autowired PasswordEncoder passwordEncoder;
 
     @Test
     public void 회원가입() throws Exception{
@@ -39,6 +41,7 @@ public class GuestServiceTest {
         guest2.setVaccineStep(1);
         guest2.setPassword("4321");
         guest2.setPhoneNumber("010-1234-1234");
+        int originSize = guestService.findGuests(new GuestSearch()).size();
 
         //when
         Long saveId1 = guestService.join(guest1);
@@ -59,18 +62,18 @@ public class GuestServiceTest {
         assertNotEquals(guest1.getId(), guest2.getId());
 
 
-        assertEquals(guests.size(), 2);
+        assertEquals(guests.size(), originSize + 2);
 
         assertEquals(findGuest1.getUsername(), "admin1");
         assertEquals(findGuest1.getFullName(), "이승환");
         assertEquals(findGuest1.getVaccineStep(), 2);
-        assertEquals(findGuest1.getPassword(), "1234");
+        findGuest1.checkPassword(passwordEncoder,"1234");
         assertEquals(findGuest1.getPhoneNumber(), "010-1234-1234");
 
         assertEquals(findGuest2.getUsername(), "admin2");
         assertEquals(findGuest2.getFullName(), "이승환");
         assertEquals(findGuest2.getVaccineStep(), 1);
-        assertEquals(findGuest2.getPassword(), "4321");
+        findGuest2.checkPassword(passwordEncoder, "4321");
         assertEquals(findGuest2.getPhoneNumber(), "010-1234-1234");
 
 
@@ -147,6 +150,7 @@ public class GuestServiceTest {
         guest2.setPhoneNumber("010-1234-1234");
 
         GuestSearch guestSearch = new GuestSearch();
+        int originSize = guestService.findGuests(guestSearch).size();
 
         //when
         guestService.join(guest1);
@@ -155,7 +159,7 @@ public class GuestServiceTest {
         //then
 
         List<Guest> findGuests = guestService.findGuests(guestSearch);
-        assertEquals(findGuests.size(), 2);
+        assertEquals(findGuests.size(), 2 + originSize);
 
         guestSearch.setUsername("admin");
         List<Guest> findUsernameGuests = guestService.findGuests(guestSearch);

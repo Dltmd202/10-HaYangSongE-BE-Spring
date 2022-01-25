@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
+import vacstage.reserve.constant.District;
 import vacstage.reserve.constant.WaitingStatus;
 import vacstage.reserve.domain.Restaurant;
 import vacstage.reserve.domain.guest.Guest;
@@ -196,7 +197,7 @@ public class WaitingServiceTest {
         Restaurant restaurant = Restaurant.createBaseRestaurant(guest);
         restaurant.setName(name);
         restaurant.setBranchName("터미널점");
-        restaurant.setDistrict("빵빵동");
+        restaurant.setDistrict(District.WN);
         restaurant.setDetailAddress("댕댕길 21");
         restaurant.setPhoneNumber("041-1234-1234");
         restaurant.setWaitingAverage(3);

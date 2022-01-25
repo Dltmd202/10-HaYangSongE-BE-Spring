@@ -16,7 +16,10 @@ import static javax.persistence.FetchType.LAZY;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class GuestWaiting {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "guest_waiting_seq_generator"
+    )
     @Column(name = "guest_waiting_id")
     private Long id;
 
