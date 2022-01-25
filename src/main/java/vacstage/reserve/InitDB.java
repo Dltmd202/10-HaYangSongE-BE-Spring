@@ -12,6 +12,7 @@ import vacstage.reserve.domain.Menu;
 import vacstage.reserve.domain.Restaurant;
 import vacstage.reserve.domain.guest.Authority;
 import vacstage.reserve.domain.guest.Guest;
+import vacstage.reserve.service.GuestService;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
@@ -36,6 +37,7 @@ public class InitDB {
     static class InitService{
 
         private final EntityManager em;
+        private final GuestService guestService;
 
         public void guestInit() throws IOException, ParseException {
             JSONParser parser = new JSONParser();
@@ -53,7 +55,7 @@ public class InitDB {
                 guest.setFullName((String) guestInformation.get("full_name"));
                 guest.setIsHost((Long) guestInformation.get("is_host") == 1L);
                 guest.setAuthority(Authority.HOST);
-                em.persist(guest);
+                guestService.join(guest);
             }
 
             reader = new FileReader("src/main/resources/static/mockUp/service_restaurant.json");
