@@ -1,7 +1,6 @@
 package vacstage.reserve.domain.guest;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,6 +18,9 @@ import java.util.List;
 
 @Entity
 @Getter @Setter
+@NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class Guest {
 
     @Id @GeneratedValue(

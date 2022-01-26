@@ -3,6 +3,7 @@ package vacstage.reserve.configure;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -56,6 +57,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
+
+    @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
@@ -85,6 +92,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(
                         "/h2-console/**"
                         ,"/favicon.ico"
+                )
+                .mvcMatchers(
+                        "/swagger-ui.html/**",
+                        "/configuration/**",
+                        "/swagger-resources/**",
+                        "/v2/api-docs",
+                        "/webjars/**",
+                        "/webjars/springfox-swagger-ui/*.{js,css}"
                 );
     }
 
@@ -96,28 +111,33 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .cors()
                 .and()
                 .authorizeRequests()
-
-                .and()
-                .exceptionHandling()
-                .accessDeniedHandler(accessDeniedHandler())
-
-                .and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-
-                .and()
-                .authorizeRequests()
-                .antMatchers("/guest").permitAll()
+                .antMatchers("/swagger-ui/**").permitAll()
+                .antMatchers("/guest/login").permitAll()
                 .antMatchers("/guest").permitAll()
                 .antMatchers("/guest/**").permitAll()
                 .anyRequest().authenticated()
 
                 .and()
+                .formLogin()
+                .disable()
+                .csrf()
+                .disable()
+                .headers()
+                .disable()
+                .rememberMe()
+                .disable()
+                .logout()
+                .disable()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .exceptionHandling()
+                .accessDeniedHandler(accessDeniedHandler())
+                .and()
                 .addFilterAfter(
                         jwtAuthenticationFilter(),
                         SecurityContextPersistenceFilter.class
                 );
+
     }
-
-
 }
