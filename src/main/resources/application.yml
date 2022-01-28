@@ -1,12 +1,11 @@
 spring:
   profiles:
-    include: jwt
+    include: jwt, db
   session:
     store-type: jdbc
   jpa:
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
         format_sql: true
         default_batch_fetch_size: 100
     open-in-view: false
