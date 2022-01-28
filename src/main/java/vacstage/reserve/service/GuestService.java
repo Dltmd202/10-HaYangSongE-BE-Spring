@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vacstage.reserve.domain.guest.Guest;
 import vacstage.reserve.domain.guest.GuestSearch;
+import vacstage.reserve.dto.guest.CreateGuestRequest;
 import vacstage.reserve.dto.guest.GuestDto;
 import vacstage.reserve.exception.NotFoundGuestException;
 import vacstage.reserve.repository.GuestRepository;
@@ -31,6 +32,12 @@ public class GuestService {
         guest.get(0).checkPassword(passwordEncoder, credentials);
 
         return guest.get(0);
+    }
+
+    @Transactional
+    public Long joinAPI(CreateGuestRequest request) {
+        Guest guest = request.toEntity();
+        return join(guest);
     }
 
     @Transactional
