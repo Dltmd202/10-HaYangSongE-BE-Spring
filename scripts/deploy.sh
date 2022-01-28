@@ -27,6 +27,15 @@ JAR_NAME=$(ls -tr $REPOSITORY | grep jar | tail -n 1)
 
 echo "> JAR NAME $JAR_NAME"
 
+echo "> Add execution permission to $JAR_NAME"
+
+chmod +x $JAR_NAME
+
+echo "> $JAR_NAME execute"
+
+
+
+
 nohup java -jar \
        -Dspring.config.location=classpath:/application.yml,/home/ec2-user/app/application-db.yml \
-        $REPOSITORY/$JAR_NAME 2>&1 &
+        $JAR_NAME > $REPOSITORY/nohup.out 2>&1 &
