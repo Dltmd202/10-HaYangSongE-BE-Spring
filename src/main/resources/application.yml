@@ -1,6 +1,6 @@
 spring:
   profiles:
-    include: jwt, db
+    include: jwt, db-prod
   session:
     store-type: jdbc
   jpa:
