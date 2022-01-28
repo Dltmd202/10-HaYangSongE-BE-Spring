@@ -37,7 +37,7 @@ deploy:
     access_key_id: $AWS_ACCESS_KEY
     secret_access_key: $AWS_SECRET_KEY
     bucket: vacstage-build
-    key: vacstage.zip
+    key: 10-HaYangSongE-BE-Spring.zip
     bundle_type: zip
     application: vacstage
     deployment_group: vacstage-group
