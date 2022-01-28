@@ -1,6 +1,9 @@
+server:
+  port: 8081
+
 spring:
   profiles:
-    include: jwt
+    include: db, jwt
   session:
     store-type: jdbc
   jpa:
@@ -18,5 +21,3 @@ logging:
   level:
     org.hibernate.SQL: debug
     org.hibernate.type: trace
-
-
