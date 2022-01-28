@@ -1,6 +1,9 @@
+server:
+  port: 8082
+
 spring:
   profiles:
-    include: jwt
+    include: db, jwt
   session:
     store-type: jdbc
   jpa:
@@ -14,9 +17,8 @@ spring:
     pathmatch:
       matching-strategy: ant_path_matcher
 
+
 logging:
   level:
     org.hibernate.SQL: debug
     org.hibernate.type: trace
-
-
