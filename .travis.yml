@@ -14,7 +14,7 @@ cache:
 script: "./gradlew clean build"
 
 before_deploy:
-  - zip -r 10-HaYangSongE-BE-Spring
+  - zip -r 10-HaYangSongE-BE-Spring *
   - mkdir -p deploy
   - mv 10-HaYangSongE-BE-Spring.zip deploy/10-HaYangSongE-BE-Spring.zip
 
