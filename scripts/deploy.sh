@@ -1,25 +1,11 @@
 x#!/bin/bash
 
-REPOSITORY=/home/ec2-user/app/step1
+REPOSITORY=/home/ec2-user/app/step2
 PROJECT_NAME=10-HaYangSongE-BE-Spring
-
-cd $REPOSITORY/$PROJECT_NAME/
-
-echo "> Git PUll"
-
-git pull
-
-echo "> build start"
-
-./gradlew build
-
-echo "> step1 change dir"
-
-cd $REPOSITORY
 
 echo "> build copy"
 
-cp $REPOSITORY/$PROJECT_NAME/build/libs/*jar $REPOSITORY/
+cp $REPOSITORY/zip/*.jar $REPOSITORY/
 
 echo "> check current pid"
 
