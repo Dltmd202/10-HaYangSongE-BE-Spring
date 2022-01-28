@@ -18,7 +18,6 @@ echo "> $JAR_NAME 실행"
 IDLE_PROFILE=$(find_idle_profile)
 
 nohup java -jar \
-    -Dspring.config.location=classpath:/application.yml,classpath:/application-$IDLE_PROFILE.yml, \
-     /home/ec2-user/app/application-db.yml,  /home/ec2-user/app/application-jwt.yml\
+    -Dspring.config.location=classpath:/application.yml,classpath:/application-$IDLE_PROFILE.yml,/home/ec2-user/app/application-db.yml,/home/ec2-user/app/application-jwt.yml
     -Dspring.profiles.active=$IDLE_PROFILE \
     $JAR_NAME > $REPOSITORY/nohup.out 2>&1 &
