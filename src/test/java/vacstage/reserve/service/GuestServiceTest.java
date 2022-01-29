@@ -52,11 +52,11 @@ public class GuestServiceTest {
 
         //then
         assertEquals(guest1,
-                guestRepository.findById(saveId1));
+                guestRepository.findById(saveId1).get());
         assertEquals(guest1, findGuest1);
 
         assertEquals(guest2,
-                guestRepository.findById(saveId2));
+                guestRepository.findById(saveId2).get());
         assertEquals(guest2, findGuest2);
 
         assertNotEquals(guest1.getId(), guest2.getId());

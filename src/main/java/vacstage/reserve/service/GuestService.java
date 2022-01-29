@@ -10,6 +10,7 @@ import vacstage.reserve.dto.guest.CreateGuestRequest;
 import vacstage.reserve.dto.guest.GuestDto;
 import vacstage.reserve.exception.NotFoundGuestException;
 import vacstage.reserve.repository.GuestRepository;
+import vacstage.reserve.repository.GuestRepositorySupport;
 
 import java.util.List;
 
@@ -20,18 +21,17 @@ public class GuestService {
 
     private final GuestRepository guestRepository;
 
+    private final GuestRepositorySupport guestRepositorySupport;
+
     private final PasswordEncoder passwordEncoder;
 
     @Transactional(readOnly = true)
     public Guest signIn(String username, String credentials) {
-        GuestSearch guestSearch = new GuestSearch();
-        guestSearch.setUsername(username);
-        List<Guest> guest = guestRepository.findAll(guestSearch);
-        validateGuestNotFound(guest);
+        Guest guest = guestRepository.findByUsername(username)
+                .orElseThrow(NotFoundGuestException::new);
+        guest.checkPassword(passwordEncoder, credentials);
 
-        guest.get(0).checkPassword(passwordEncoder, credentials);
-
-        return guest.get(0);
+        return guest;
     }
 
     @Transactional
@@ -58,23 +58,25 @@ public class GuestService {
     private void validateDuplicatedGuest(Guest guest) throws IllegalStateException {
         GuestSearch guestSearch = new GuestSearch();
         guestSearch.setUsername(guest.getUsername());
-        List<Guest> findGuests = guestRepository.findAll(guestSearch);
+        List<Guest> findGuests = guestRepositorySupport.findAll(guestSearch);
         if(!findGuests.isEmpty()){
             throw new IllegalStateException("이미 존재하는 회원입니다.");
         }
     }
 
     public Guest findOne(Long guestId){
-        return guestRepository.findById(guestId);
+        return guestRepository.findById(guestId)
+                .orElseThrow(NotFoundGuestException::new);
     }
 
     public List<Guest> findGuests(GuestSearch guestSearch) {
-        return guestRepository.findAll(guestSearch);
+        return guestRepositorySupport.findAll(guestSearch);
     }
 
     @Transactional
     public void update(Long id, GuestDto request){
-        Guest guest = guestRepository.findById(id);
+        Guest guest = guestRepository.findById(id)
+                .orElseThrow(NotFoundGuestException::new);
         guest.updateGuestInformation(request);
         validateDuplicatedGuest(guest);
     }

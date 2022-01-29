@@ -9,6 +9,7 @@ import vacstage.reserve.domain.guest.Guest;
 import vacstage.reserve.domain.waiting.Waiting;
 import vacstage.reserve.exception.GuestAlreadyHaveWaiting;
 import vacstage.reserve.exception.NotAcceptableVaccineStep;
+import vacstage.reserve.exception.NotFoundGuestException;
 import vacstage.reserve.repository.GuestRepository;
 import vacstage.reserve.repository.RestaurantRepository;
 import vacstage.reserve.repository.WaitingRepository;
@@ -38,12 +39,14 @@ public class WaitingService {
             Long restaurantId, Long leaderId, List<Long> memberIds)
     {
         Restaurant restaurant = restaurantRepository.findById(restaurantId);
-        Guest leader = guestRepository.findById(leaderId);
+        Guest leader = guestRepository.findById(leaderId)
+                .orElseThrow(NotFoundGuestException::new);
         validateGuestVaccineStep(restaurant, leader);
         validateGuestAlreadyHaveWaiting(leader);
 
         List<Guest> members = memberIds.stream()
-                .map(guestRepository::findById)
+                .map(memberId -> guestRepository.findById(memberId)
+                        .orElseThrow(NotFoundGuestException::new))
                 .collect(Collectors.toList());
 
         for (Guest member : members) {
@@ -65,13 +68,14 @@ public class WaitingService {
             Long restaurantId, Long leaderId, Long... memberIds)
     {
         Restaurant restaurant = restaurantRepository.findById(restaurantId);
-        Guest leader = guestRepository.findById(leaderId);
+        Guest leader = guestRepository.findById(leaderId).get();
         validateGuestVaccineStep(restaurant, leader);
         validateGuestAlreadyHaveWaiting(leader);
 
         List<Guest> members = new ArrayList<>();
         for (Long memberId: memberIds){
-            Guest member = guestRepository.findById(memberId);
+            Guest member = guestRepository.findById(memberId)
+                    .orElseThrow(NotFoundGuestException::new);
             validateGuestVaccineStep(restaurant, member);
             validateGuestAlreadyHaveWaiting(member);
             members.add(member);
