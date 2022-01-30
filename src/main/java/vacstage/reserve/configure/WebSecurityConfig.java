@@ -115,6 +115,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/guest/login").permitAll()
                 .antMatchers("/guest").permitAll()
                 .antMatchers("/guest/**").permitAll()
+                .antMatchers("/restaurant/**").permitAll()
                 .antMatchers("/profile").permitAll()
                 .anyRequest().authenticated()
 
