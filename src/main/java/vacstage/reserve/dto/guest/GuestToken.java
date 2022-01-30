@@ -1,12 +1,14 @@
 package vacstage.reserve.dto.guest;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.List;
 
 @Getter @Setter
+@NoArgsConstructor
 public class GuestToken {
 
     private String username;

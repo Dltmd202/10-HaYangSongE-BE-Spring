@@ -1,6 +1,7 @@
 package vacstage.reserve.dto.guest;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import vacstage.reserve.domain.guest.Guest;
@@ -8,6 +9,7 @@ import vacstage.reserve.domain.guest.Guest;
 import java.time.LocalDateTime;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateGuestRequest{
