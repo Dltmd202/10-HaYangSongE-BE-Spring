@@ -9,6 +9,7 @@ import vacstage.reserve.domain.Restaurant;
 import vacstage.reserve.domain.waiting.Waiting;
 import vacstage.reserve.domain.waiting.WaitingSearch;
 import vacstage.reserve.exception.NoWaitingToAccept;
+import vacstage.reserve.exception.NotFoundRestaurantException;
 import vacstage.reserve.repository.AcceptationRepository;
 import vacstage.reserve.repository.RestaurantRepository;
 import vacstage.reserve.repository.WaitingRepository;
@@ -34,7 +35,8 @@ public class RestaurantService {
     }
 
     public Restaurant findOne(Long restaurantId) {
-        return restaurantRepository.findById(restaurantId);
+        return restaurantRepository.findById(restaurantId)
+                .orElseThrow(NotFoundRestaurantException::new);
     }
 
     public List<Restaurant> findRestaurants(){
@@ -46,7 +48,8 @@ public class RestaurantService {
      */
     @Transactional
     public Long acceptWaiting(Long restaurantId){
-        Restaurant restaurant = restaurantRepository.findById(restaurantId);
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(NotFoundRestaurantException::new);
         WaitingSearch waitingSearch = createAcceptSearchCondition(restaurantId, 1);
         List<Waiting> findWaiting = waitingRepository.findAll(waitingSearch);
         validateWaitingToAccept(findWaiting);

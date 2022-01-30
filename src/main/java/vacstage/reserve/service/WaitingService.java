@@ -10,6 +10,7 @@ import vacstage.reserve.domain.waiting.Waiting;
 import vacstage.reserve.exception.GuestAlreadyHaveWaiting;
 import vacstage.reserve.exception.NotAcceptableVaccineStep;
 import vacstage.reserve.exception.NotFoundGuestException;
+import vacstage.reserve.exception.NotFoundRestaurantException;
 import vacstage.reserve.repository.GuestRepository;
 import vacstage.reserve.repository.RestaurantRepository;
 import vacstage.reserve.repository.WaitingRepository;
@@ -38,7 +39,8 @@ public class WaitingService {
     public Long waiting(
             Long restaurantId, Long leaderId, List<Long> memberIds)
     {
-        Restaurant restaurant = restaurantRepository.findById(restaurantId);
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(NotFoundRestaurantException::new);
         Guest leader = guestRepository.findById(leaderId)
                 .orElseThrow(NotFoundGuestException::new);
         validateGuestVaccineStep(restaurant, leader);
@@ -67,7 +69,8 @@ public class WaitingService {
     public Long waiting(
             Long restaurantId, Long leaderId, Long... memberIds)
     {
-        Restaurant restaurant = restaurantRepository.findById(restaurantId);
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(NotFoundRestaurantException::new);
         Guest leader = guestRepository.findById(leaderId).get();
         validateGuestVaccineStep(restaurant, leader);
         validateGuestAlreadyHaveWaiting(leader);
