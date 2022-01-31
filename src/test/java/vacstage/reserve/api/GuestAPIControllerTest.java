@@ -27,12 +27,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class GuestAPIControllerTest {
 
-    @Autowired
-    public ObjectMapper objectMapper;
-    @Autowired
-    public GuestRepository guestRepository;
-    @Autowired
-    private MockMvc mockMvc;
+    @Autowired public ObjectMapper objectMapper;
+    @Autowired public GuestRepository guestRepository;
+    @Autowired private MockMvc mockMvc;
 
     @Before
     public void setUp() throws Exception {
