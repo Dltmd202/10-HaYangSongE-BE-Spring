@@ -45,6 +45,7 @@ public class GuestDto {
         this.is_staff = guest.getIsStaff();
         this.is_host = guest.getIsHost();
         this.waiting_current = guest.getCurrentWaiting();
+        this.vaccine_elapsed = guest.getVaccineElapsed();
     }
 
     public GuestDto() {
