@@ -121,6 +121,66 @@ public class GuestAPIControllerTest {
     }
 
     @Test
+    public void 회원가입_조건에_맞지않은_요청() throws Exception{
+        //given
+        String fullName = "tester1";
+        String username = "test1";
+        String password = "1234";
+        int vaccineStep = 2;
+        String phoneNumber = "010-4321-4321";
+        LocalDateTime vaccineDate = LocalDateTime.now().minusDays(21);
+
+        String createGuestRequest = objectMapper.
+                writeValueAsString(CreateGuestRequest.builder()
+                        .username(username)
+                        .password(password)
+                        .vaccine_step(vaccineStep)
+                        .vaccine_date(vaccineDate)
+                        .phone_number(phoneNumber)
+                        .build());
+        //when
+        mockMvc.perform(post("/guest")
+                        .content(createGuestRequest)
+                        .contentType(APPLICATION_JSON)
+                        .accept(APPLICATION_JSON))
+                //then
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void 중복된_username_으로_가입요청() throws Exception{
+        //given
+        String fullName = "이승환";
+        String username = "admin";
+        String password = "1234";
+        int vaccineStep = 2;
+        LocalDateTime vaccineDate = LocalDateTime.now().minusDays(21);
+        String phoneNumber = "010-1234-1234";
+
+        String createGuestRequest = objectMapper.
+                writeValueAsString(CreateGuestRequest.builder()
+                        .full_name(fullName)
+                        .username(username)
+                        .password(password)
+                        .vaccine_step(vaccineStep)
+                        .vaccine_date(vaccineDate)
+                        .phone_number(phoneNumber)
+                        .build());
+        //when
+        mockMvc.perform(post("/guest")
+                        .content(createGuestRequest)
+                        .contentType(APPLICATION_JSON)
+                        .accept(APPLICATION_JSON))
+                //then
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.full_name").value(fullName))
+                .andExpect(jsonPath("$.data.username").value(username))
+                .andExpect(jsonPath("$.data.vaccine_step").value(vaccineStep))
+                .andExpect(jsonPath("$.data.phone_number").value(phoneNumber))
+                .andExpect(jsonPath("$.data.vaccine_elapsed").value(21));
+    }
+
+    @Test
     @WithMockUser
     public void 게스트_조회() throws Exception{
         //given
