@@ -8,6 +8,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import vacstage.reserve.domain.guest.Guest;
 import vacstage.reserve.domain.guest.GuestSearch;
+import vacstage.reserve.dto.api.ApiListResponse;
+import vacstage.reserve.dto.api.ApiResponse;
 import vacstage.reserve.dto.guest.*;
 import vacstage.reserve.jwt.JwtAuthentication;
 import vacstage.reserve.jwt.JwtAuthenticationToken;
@@ -27,17 +29,17 @@ public class GuestAPIController {
 
     @Operation(summary = "게스트 탐색")
     @GetMapping("/guest/{id}")
-    public GuestDto find(@PathVariable("id") Long id) {
+    public ResponseEntity<ApiResponse<GuestDto>> find(@PathVariable("id") Long id) {
         Guest guest  = guestService.findOne(id);
-        return new GuestDto(guest);
+        return ResponseEntity.ok(ApiResponse.of(new GuestDto(guest)));
     }
 
     @PostMapping("/guest")
-    public CreateGuestResponse signUp(
+    public ResponseEntity<ApiResponse<CreateGuestResponse>> signUp(
             @RequestBody @Valid CreateGuestRequest request){
         Long guestId = guestService.joinAPI(request);
         Guest guest = guestService.findOne(guestId);
-        return new CreateGuestResponse(guest);
+        return ResponseEntity.ok(ApiResponse.of(new CreateGuestResponse(guest)));
     }
 
     @Operation(summary = "JWT 토큰 발행 로그인")
@@ -63,11 +65,15 @@ public class GuestAPIController {
     }
 
     @GetMapping("/guest")
-    public List<GuestDto> list(){
-        List<Guest> guests = guestService.findGuests(new GuestSearch());
-        return guests.stream()
+    public ResponseEntity<ApiListResponse<List<GuestDto>>> list(
+            @RequestParam(value = "offset", defaultValue = "0") int offset,
+            @RequestParam(value = "limit", defaultValue = "100") int limit
+    ){
+        List<Guest> guests = guestService.findGuests(new GuestSearch(), offset, limit);
+        List<GuestDto> guestDtos = guests.stream()
                 .map(GuestDto::new)
                 .collect(Collectors.toList());
+        return ResponseEntity.ok(ApiListResponse.of(guestDtos, offset, limit));
     }
 
 

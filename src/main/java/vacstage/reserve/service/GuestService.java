@@ -73,6 +73,10 @@ public class GuestService {
         return guestRepositorySupport.findAll(guestSearch);
     }
 
+    public List<Guest> findGuests(GuestSearch guestSearch, int offset, int limit) {
+        return guestRepositorySupport.findAll(guestSearch, offset, limit);
+    }
+
     @Transactional
     public void update(Long id, GuestDto request){
         Guest guest = guestRepository.findById(id)

@@ -113,11 +113,11 @@ public class GuestAPIControllerTest {
                         .accept(APPLICATION_JSON))
         //then
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.full_name").value(fullName))
-                .andExpect(jsonPath("$.username").value(username))
-                .andExpect(jsonPath("$.vaccine_step").value(vaccineStep))
-                .andExpect(jsonPath("$.phone_number").value(phoneNumber))
-                .andExpect(jsonPath("$.vaccine_elapsed").value(21));
+                .andExpect(jsonPath("$.data.full_name").value(fullName))
+                .andExpect(jsonPath("$.data.username").value(username))
+                .andExpect(jsonPath("$.data.vaccine_step").value(vaccineStep))
+                .andExpect(jsonPath("$.data.phone_number").value(phoneNumber))
+                .andExpect(jsonPath("$.data.vaccine_elapsed").value(21));
     }
 
     @Test
@@ -135,11 +135,11 @@ public class GuestAPIControllerTest {
                 .accept(APPLICATION_JSON))
         //then
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.full_name").value(fullName))
-                .andExpect(jsonPath("$.username").value(username))
-                .andExpect(jsonPath("$.vaccine_step").value(vaccineStep))
-                .andExpect(jsonPath("$.phone_number").value(phoneNumber))
-                .andExpect(jsonPath("$.vaccine_elapsed").value(21));
+                .andExpect(jsonPath("$.data.full_name").value(fullName))
+                .andExpect(jsonPath("$.data.username").value(username))
+                .andExpect(jsonPath("$.data.vaccine_step").value(vaccineStep))
+                .andExpect(jsonPath("$.data.phone_number").value(phoneNumber))
+                .andExpect(jsonPath("$.data.vaccine_elapsed").value(21));
     }
 
     @Test
@@ -161,16 +161,16 @@ public class GuestAPIControllerTest {
                 .accept(APPLICATION_JSON))
         //then
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.[0].full_name").value(fullName1))
-                .andExpect(jsonPath("$.[0].username").value(username1))
-                .andExpect(jsonPath("$.[0].vaccine_step").value(vaccineStep1))
-                .andExpect(jsonPath("$.[0].phone_number").value(phoneNumber1))
-                .andExpect(jsonPath("$.[0].vaccine_elapsed").value(21))
-                .andExpect(jsonPath("$.[1].full_name").value(fullName2))
-                .andExpect(jsonPath("$.[1].username").value(username2))
-                .andExpect(jsonPath("$.[1].vaccine_step").value(vaccineStep2))
-                .andExpect(jsonPath("$.[1].phone_number").value(phoneNumber2))
-                .andExpect(jsonPath("$.[1].vaccine_elapsed").value(14));
+                .andExpect(jsonPath("$.data.[0].full_name").value(fullName1))
+                .andExpect(jsonPath("$.data.[0].username").value(username1))
+                .andExpect(jsonPath("$.data.[0].vaccine_step").value(vaccineStep1))
+                .andExpect(jsonPath("$.data.[0].phone_number").value(phoneNumber1))
+                .andExpect(jsonPath("$.data.[0].vaccine_elapsed").value(21))
+                .andExpect(jsonPath("$.data.[1].full_name").value(fullName2))
+                .andExpect(jsonPath("$.data.[1].username").value(username2))
+                .andExpect(jsonPath("$.data.[1].vaccine_step").value(vaccineStep2))
+                .andExpect(jsonPath("$.data.[1].phone_number").value(phoneNumber2))
+                .andExpect(jsonPath("$.data.[1].vaccine_elapsed").value(14));
     }
 
     @Test
