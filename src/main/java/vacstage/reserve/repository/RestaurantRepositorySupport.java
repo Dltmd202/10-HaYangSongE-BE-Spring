@@ -37,6 +37,18 @@ public class RestaurantRepositorySupport {
                 .getResultList();
     }
 
+    private List<RestaurantDto> findBaseRestaurantDtos(int offset, int limit){
+        return em.createQuery(
+                        "select new vacstage.reserve.dto.restaurant.RestaurantDto(" +
+                                "r.id, r.name, r.phoneNumber, r.branchName, r.district, r.detailAddress, r.waitingAverage," +
+                                "r.restaurantPhoto, r.vaccineCondition, r.totalSeat, r.remainSeat, h)" +
+                                " from Restaurant r" +
+                                " join r.host h ", RestaurantDto.class)
+                .setFirstResult(offset)
+                .setMaxResults(limit)
+                .getResultList();
+    }
+
     private List<MenuDto> findMenu(Long restaurantId){
         return em.createQuery(
                 "select new vacstage.reserve.dto.restaurant.MenuDto(m.id, m.name, m.price)" +
@@ -106,6 +118,16 @@ public class RestaurantRepositorySupport {
 
     public List<RestaurantDto> findRestaurantDtos(){
         List<RestaurantDto> baseRestaurantDtos = findBaseRestaurantDtos();
+        baseRestaurantDtos.forEach(r -> {
+            r.setMenus(findMenu(r.getId()));
+            r.setAcceptation(findAcceptation(r.getId()));
+            r.setWaitings(findWaitingDtos(r.getId()));
+        });
+        return baseRestaurantDtos;
+    }
+
+    public List<RestaurantDto> findRestaurantDtos(int offset, int limit){
+        List<RestaurantDto> baseRestaurantDtos = findBaseRestaurantDtos(offset, limit);
         baseRestaurantDtos.forEach(r -> {
             r.setMenus(findMenu(r.getId()));
             r.setAcceptation(findAcceptation(r.getId()));
