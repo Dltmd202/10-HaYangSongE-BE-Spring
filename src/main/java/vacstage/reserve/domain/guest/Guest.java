@@ -30,14 +30,18 @@ public class Guest {
     @Column(name = "guest_id")
     private Long id;
 
+    @Column(nullable = false)
     private String username;
 
+    @Column(nullable = false)
     private String password;
 
     private String email;
 
+    @Column(nullable = false)
     private String fullName;
 
+    @Column(nullable = false)
     private int vaccineStep;
 
     @OneToMany(mappedBy = "guest", cascade = CascadeType.ALL)
@@ -76,7 +80,11 @@ public class Guest {
 
     public int getVaccineElapsed(){
         LocalDateTime now = LocalDateTime.now();
-        return (int)ChronoUnit.DAYS.between(vaccineDate, now);
+        if(vaccineDate == null){
+            return 0;
+        } else {
+            return (int) ChronoUnit.DAYS.between(vaccineDate, now);
+        }
     }
 
     public void checkPassword(PasswordEncoder passwordEncoder, String credentials){

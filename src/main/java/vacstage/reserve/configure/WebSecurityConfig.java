@@ -3,6 +3,7 @@ package vacstage.reserve.configure;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -113,11 +114,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/swagger-ui/**").permitAll()
                 .antMatchers("/guest/login").permitAll()
-                .antMatchers("/guest").permitAll()
-                .antMatchers("/guest/**").permitAll()
-                .antMatchers("/restaurant/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/guest").permitAll()
+                .antMatchers(HttpMethod.GET, "/guest").authenticated()
+                .antMatchers(HttpMethod.GET,"/guest/**").authenticated()
+                .antMatchers("/restaurant/**").authenticated()
                 .antMatchers("/profile").permitAll()
-                .anyRequest().authenticated()
 
                 .and()
                 .formLogin()
