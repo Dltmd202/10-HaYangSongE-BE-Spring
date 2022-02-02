@@ -43,6 +43,20 @@ public class GuestRepositorySupport {
                 .fetch();
     }
 
+    public List<Guest> findAll(GuestSearch guestSearch, int offset, int limit) {
+        QGuest quest = guest;
+
+
+        JPAQueryFactory query = new JPAQueryFactory(em);
+        return query
+                .select(guest)
+                .from(guest)
+                .where(usernameLike(guestSearch.getUsername()), fullNameLike(guestSearch.getFullName()))
+                .offset(offset)
+                .limit(limit)
+                .fetch();
+    }
+
     private BooleanExpression usernameLike(String username) {
         if(!StringUtils.hasText(username)){
             return null;

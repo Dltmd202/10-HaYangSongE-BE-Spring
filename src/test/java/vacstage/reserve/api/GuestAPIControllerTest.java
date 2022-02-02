@@ -8,6 +8,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import vacstage.reserve.dto.guest.CreateGuestRequest;
@@ -27,12 +28,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class GuestAPIControllerTest {
 
-    @Autowired
-    public ObjectMapper objectMapper;
-    @Autowired
-    public GuestRepository guestRepository;
-    @Autowired
-    private MockMvc mockMvc;
+    @Autowired public ObjectMapper objectMapper;
+    @Autowired public GuestRepository guestRepository;
+    @Autowired private MockMvc mockMvc;
 
     @Before
     public void setUp() throws Exception {
@@ -115,14 +113,75 @@ public class GuestAPIControllerTest {
                         .accept(APPLICATION_JSON))
         //then
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.full_name").value(fullName))
-                .andExpect(jsonPath("$.username").value(username))
-                .andExpect(jsonPath("$.vaccine_step").value(vaccineStep))
-                .andExpect(jsonPath("$.phone_number").value(phoneNumber))
-                .andExpect(jsonPath("$.vaccine_elapsed").value(21));
+                .andExpect(jsonPath("$.data.full_name").value(fullName))
+                .andExpect(jsonPath("$.data.username").value(username))
+                .andExpect(jsonPath("$.data.vaccine_step").value(vaccineStep))
+                .andExpect(jsonPath("$.data.phone_number").value(phoneNumber))
+                .andExpect(jsonPath("$.data.vaccine_elapsed").value(21));
     }
 
     @Test
+    public void 회원가입_조건에_맞지않은_요청() throws Exception{
+        //given
+        String fullName = "tester1";
+        String username = "test1";
+        String password = "1234";
+        int vaccineStep = 2;
+        String phoneNumber = "010-4321-4321";
+        LocalDateTime vaccineDate = LocalDateTime.now().minusDays(21);
+
+        String createGuestRequest = objectMapper.
+                writeValueAsString(CreateGuestRequest.builder()
+                        .username(username)
+                        .password(password)
+                        .vaccine_step(vaccineStep)
+                        .vaccine_date(vaccineDate)
+                        .phone_number(phoneNumber)
+                        .build());
+        //when
+        mockMvc.perform(post("/guest")
+                        .content(createGuestRequest)
+                        .contentType(APPLICATION_JSON)
+                        .accept(APPLICATION_JSON))
+                //then
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void 중복된_username_으로_가입요청() throws Exception{
+        //given
+        String fullName = "이승환";
+        String username = "admin";
+        String password = "1234";
+        int vaccineStep = 2;
+        LocalDateTime vaccineDate = LocalDateTime.now().minusDays(21);
+        String phoneNumber = "010-1234-1234";
+
+        String createGuestRequest = objectMapper.
+                writeValueAsString(CreateGuestRequest.builder()
+                        .full_name(fullName)
+                        .username(username)
+                        .password(password)
+                        .vaccine_step(vaccineStep)
+                        .vaccine_date(vaccineDate)
+                        .phone_number(phoneNumber)
+                        .build());
+        //when
+        mockMvc.perform(post("/guest")
+                        .content(createGuestRequest)
+                        .contentType(APPLICATION_JSON)
+                        .accept(APPLICATION_JSON))
+                //then
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.full_name").value(fullName))
+                .andExpect(jsonPath("$.data.username").value(username))
+                .andExpect(jsonPath("$.data.vaccine_step").value(vaccineStep))
+                .andExpect(jsonPath("$.data.phone_number").value(phoneNumber))
+                .andExpect(jsonPath("$.data.vaccine_elapsed").value(21));
+    }
+
+    @Test
+    @WithMockUser
     public void 게스트_조회() throws Exception{
         //given
         Long id = 1L;
@@ -136,14 +195,15 @@ public class GuestAPIControllerTest {
                 .accept(APPLICATION_JSON))
         //then
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.full_name").value(fullName))
-                .andExpect(jsonPath("$.username").value(username))
-                .andExpect(jsonPath("$.vaccine_step").value(vaccineStep))
-                .andExpect(jsonPath("$.phone_number").value(phoneNumber))
-                .andExpect(jsonPath("$.vaccine_elapsed").value(21));
+                .andExpect(jsonPath("$.data.full_name").value(fullName))
+                .andExpect(jsonPath("$.data.username").value(username))
+                .andExpect(jsonPath("$.data.vaccine_step").value(vaccineStep))
+                .andExpect(jsonPath("$.data.phone_number").value(phoneNumber))
+                .andExpect(jsonPath("$.data.vaccine_elapsed").value(21));
     }
 
     @Test
+    @WithMockUser
     public void 게스트_리스트_조회() throws Exception{
         //given
         String fullName1 = "tester1";
@@ -161,16 +221,16 @@ public class GuestAPIControllerTest {
                 .accept(APPLICATION_JSON))
         //then
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.[0].full_name").value(fullName1))
-                .andExpect(jsonPath("$.[0].username").value(username1))
-                .andExpect(jsonPath("$.[0].vaccine_step").value(vaccineStep1))
-                .andExpect(jsonPath("$.[0].phone_number").value(phoneNumber1))
-                .andExpect(jsonPath("$.[0].vaccine_elapsed").value(21))
-                .andExpect(jsonPath("$.[1].full_name").value(fullName2))
-                .andExpect(jsonPath("$.[1].username").value(username2))
-                .andExpect(jsonPath("$.[1].vaccine_step").value(vaccineStep2))
-                .andExpect(jsonPath("$.[1].phone_number").value(phoneNumber2))
-                .andExpect(jsonPath("$.[1].vaccine_elapsed").value(14));
+                .andExpect(jsonPath("$.data.[0].full_name").value(fullName1))
+                .andExpect(jsonPath("$.data.[0].username").value(username1))
+                .andExpect(jsonPath("$.data.[0].vaccine_step").value(vaccineStep1))
+                .andExpect(jsonPath("$.data.[0].phone_number").value(phoneNumber1))
+                .andExpect(jsonPath("$.data.[0].vaccine_elapsed").value(21))
+                .andExpect(jsonPath("$.data.[1].full_name").value(fullName2))
+                .andExpect(jsonPath("$.data.[1].username").value(username2))
+                .andExpect(jsonPath("$.data.[1].vaccine_step").value(vaccineStep2))
+                .andExpect(jsonPath("$.data.[1].phone_number").value(phoneNumber2))
+                .andExpect(jsonPath("$.data.[1].vaccine_elapsed").value(14));
     }
 
     @Test

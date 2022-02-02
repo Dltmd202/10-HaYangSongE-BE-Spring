@@ -44,10 +44,6 @@ public class CreateGuestResponse {
         this.is_staff = guest.getIsStaff();
         this.is_host = guest.getIsHost();
         this.waiting_current = guest.getCurrentWaiting();
-        this.vaccine_elapsed = calculateVaccineElapsed(guest.getVaccineDate());
-    }
-
-    public static int calculateVaccineElapsed(LocalDateTime vaccine_date){
-        return 1;
+        this.vaccine_elapsed = guest.getVaccineElapsed();
     }
 }
