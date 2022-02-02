@@ -16,6 +16,7 @@ for RETRY_COUNT in {1..10}
 do
   RESPONSE=$(curl -s http://localhost:${IDLE_PORT}/profile)
   UP_COUNT=$(echo ${RESPONSE} | grep 'prod' | wc -l)
+  echo > "> current response: ${RESPONSE}"
 
   if [ ${UP_COUNT} -ge 1 ]
   then
@@ -23,7 +24,7 @@ do
       switch_proxy
       break
   else
-      echo ">no Health check"
+      echo "> no Health check"
       echo "> Health check: ${RESPONSE}"
   fi
 
