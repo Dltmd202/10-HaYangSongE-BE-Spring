@@ -14,6 +14,7 @@ import vacstage.reserve.domain.waiting.Waiting;
 import vacstage.reserve.exception.GuestAlreadyHaveWaiting;
 import vacstage.reserve.exception.NotAcceptableVaccineStep;
 import vacstage.reserve.repository.WaitingRepository;
+import vacstage.reserve.repository.WaitingRepositorySupport;
 
 import java.time.LocalDateTime;
 
@@ -27,7 +28,11 @@ public class WaitingServiceTest {
 
     @Autowired WaitingService waitingService;
 
-    @Autowired WaitingRepository waitingRepository;
+    @Autowired
+    WaitingRepositorySupport waitingRepositorySupport;
+
+    @Autowired
+    WaitingRepository waitingRepository;
 
     @Autowired RestaurantService restaurantService;
 
@@ -56,7 +61,7 @@ public class WaitingServiceTest {
                 restaurant.getId(), leader.getId(), guest1.getId(), guest2.getId(), guest3.getId());
 
         //then
-        Waiting findWaiting = waitingRepository.findById(waitingId);
+        Waiting findWaiting = waitingRepository.findById(waitingId).get();
         assertEquals(findWaiting.getWaitingStatus(), WaitingStatus.WAITING);
         assertEquals(findWaiting.getLeader(), leader);
         assertEquals(findWaiting.getMember().get(0).getGuest(), guest1);
