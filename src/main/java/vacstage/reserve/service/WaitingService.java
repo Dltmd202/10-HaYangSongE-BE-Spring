@@ -7,13 +7,12 @@ import vacstage.reserve.domain.GuestWaiting;
 import vacstage.reserve.domain.Restaurant;
 import vacstage.reserve.domain.guest.Guest;
 import vacstage.reserve.domain.waiting.Waiting;
-import vacstage.reserve.exception.GuestAlreadyHaveWaiting;
-import vacstage.reserve.exception.NotAcceptableVaccineStep;
-import vacstage.reserve.exception.NotFoundGuestException;
-import vacstage.reserve.exception.NotFoundRestaurantException;
+import vacstage.reserve.dto.waiting.RegisterWaitingDto;
+import vacstage.reserve.dto.waiting.WaitingMemberDto;
+import vacstage.reserve.exception.*;
 import vacstage.reserve.repository.GuestRepository;
 import vacstage.reserve.repository.RestaurantRepository;
-import vacstage.reserve.repository.WaitingRepository;
+import vacstage.reserve.repository.WaitingRepositorySupport;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,32 +25,45 @@ public class WaitingService {
 
     private final GuestRepository guestRepository;
     private final RestaurantRepository restaurantRepository;
-    private final WaitingRepository waitingRepository;
+    private final WaitingRepositorySupport waitingRepositorySupport;
 
     public Waiting findOne(Long id){
-        return waitingRepository.findById(id);
+        Waiting waiting = waitingRepositorySupport.findById(id)
+                .orElseThrow(NotFoundWaitingException::new);
+        return waiting;
     }
 
     /*
      * 웨이팅 등록
      */
     @Transactional
-    public Long waiting(
-            Long restaurantId, Long leaderId, List<Long> memberIds)
-    {
-        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+    public Long waiting(RegisterWaitingDto registerWaitingDto){
+        Restaurant restaurant = restaurantRepository.findById(registerWaitingDto.getRestaurant())
                 .orElseThrow(NotFoundRestaurantException::new);
-        Guest leader = guestRepository.findById(leaderId)
-                .orElseThrow(NotFoundGuestException::new);
+
+        Guest leader = guestRepository.findByUsername(
+                registerWaitingDto.getLeader()
+        ).orElseThrow(NotFoundGuestException::new);
+
+        List<Guest> members = new ArrayList<>();
+        for (WaitingMemberDto waitingMemberDto: registerWaitingDto.getMember()){
+            Guest member = guestRepository.findByUsername(
+                    waitingMemberDto.getUsername()
+                    )
+                    .orElseThrow(NotFoundGuestException::new);
+            members.add(member);
+        }
+        return waiting(restaurant, leader, members);
+    }
+
+    @Transactional
+    public Long waiting(
+            Restaurant restaurant, Guest leader, List<Guest> members)
+    {
         validateGuestVaccineStep(restaurant, leader);
         validateGuestAlreadyHaveWaiting(leader);
 
-        List<Guest> members = memberIds.stream()
-                .map(memberId -> guestRepository.findById(memberId)
-                        .orElseThrow(NotFoundGuestException::new))
-                .collect(Collectors.toList());
-
-        for (Guest member : members) {
+        for (Guest member: members){
             validateGuestVaccineStep(restaurant, member);
             validateGuestAlreadyHaveWaiting(member);
         }
@@ -61,8 +73,26 @@ public class WaitingService {
                 .collect(Collectors.toList());
 
         Waiting waiting = Waiting.createWaiting(restaurant, leader, guestWaitings);
-        waitingRepository.save(waiting);
+
+        waitingRepositorySupport.save(waiting);
         return waiting.getId();
+    }
+
+    @Transactional
+    public Long waiting(
+            Long restaurantId, Long leaderId, List<Long> memberIds)
+    {
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(NotFoundRestaurantException::new);
+        Guest leader = guestRepository.findById(leaderId).get();
+
+        List<Guest> members = new ArrayList<>();
+        for (Long memberId: memberIds){
+            Guest member = guestRepository.findById(memberId)
+                    .orElseThrow(NotFoundGuestException::new);
+            members.add(member);
+        }
+        return waiting(restaurant, leader, members);
     }
 
     @Transactional
@@ -72,26 +102,14 @@ public class WaitingService {
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(NotFoundRestaurantException::new);
         Guest leader = guestRepository.findById(leaderId).get();
-        validateGuestVaccineStep(restaurant, leader);
-        validateGuestAlreadyHaveWaiting(leader);
 
         List<Guest> members = new ArrayList<>();
         for (Long memberId: memberIds){
             Guest member = guestRepository.findById(memberId)
                     .orElseThrow(NotFoundGuestException::new);
-            validateGuestVaccineStep(restaurant, member);
-            validateGuestAlreadyHaveWaiting(member);
             members.add(member);
         }
-
-        List<GuestWaiting> guestWaitings = members.stream()
-                .map(GuestWaiting::createGuestWaiting)
-                .collect(Collectors.toList());
-
-        Waiting waiting = Waiting.createWaiting(restaurant, leader, guestWaitings);
-
-        waitingRepository.save(waiting);
-        return waiting.getId();
+        return waiting(restaurant, leader, members);
     }
 
     private void validateGuestVaccineStep(Restaurant restaurant, Guest guest){

@@ -12,7 +12,7 @@ import vacstage.reserve.exception.NoWaitingToAccept;
 import vacstage.reserve.exception.NotFoundRestaurantException;
 import vacstage.reserve.repository.AcceptationRepository;
 import vacstage.reserve.repository.RestaurantRepository;
-import vacstage.reserve.repository.WaitingRepository;
+import vacstage.reserve.repository.WaitingRepositorySupport;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -24,7 +24,7 @@ public class RestaurantService {
 
     private final RestaurantRepository restaurantRepository;
 
-    private final WaitingRepository waitingRepository;
+    private final WaitingRepositorySupport waitingRepositorySupport;
 
     private final AcceptationRepository acceptationRepository;
 
@@ -51,7 +51,7 @@ public class RestaurantService {
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(NotFoundRestaurantException::new);
         WaitingSearch waitingSearch = createAcceptSearchCondition(restaurantId, 1);
-        List<Waiting> findWaiting = waitingRepository.findAll(waitingSearch);
+        List<Waiting> findWaiting = waitingRepositorySupport.findAll(waitingSearch);
         validateWaitingToAccept(findWaiting);
         Acceptation acceptation = Acceptation.createAccept(restaurant, findWaiting.get(0));
         acceptationRepository.save(acceptation);
