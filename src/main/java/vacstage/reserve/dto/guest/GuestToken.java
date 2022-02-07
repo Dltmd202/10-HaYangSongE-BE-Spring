@@ -11,13 +11,16 @@ import java.util.List;
 @NoArgsConstructor
 public class GuestToken {
 
+    private Long id;
+
     private String username;
 
     private String token;
 
     private List<GrantedAuthority> authorities;
 
-    public GuestToken(String username, String token, List<GrantedAuthority> authorities) {
+    public GuestToken(Long id, String username, String token, List<GrantedAuthority> authorities) {
+        this.id = id;
         this.username = username;
         this.token = token;
         this.authorities = authorities;
