@@ -57,6 +57,7 @@ public class GuestAPIController {
         Guest guest = (Guest) jwtAuthenticationToken.getDetails();
 
         return ResponseEntity.ok(new GuestToken(
+                guest.getId(),
                 guest.getUsername(),
                 principal.getToken(),
                 guest.getAuthorities()
