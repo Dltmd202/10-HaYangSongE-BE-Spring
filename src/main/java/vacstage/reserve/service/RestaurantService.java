@@ -8,6 +8,7 @@ import vacstage.reserve.domain.Acceptation;
 import vacstage.reserve.domain.Restaurant;
 import vacstage.reserve.domain.waiting.Waiting;
 import vacstage.reserve.domain.waiting.WaitingSearch;
+import vacstage.reserve.exception.GuestNotRestaurantHost;
 import vacstage.reserve.exception.NoWaitingToAccept;
 import vacstage.reserve.exception.NotFoundRestaurantException;
 import vacstage.reserve.repository.AcceptationRepository;
@@ -75,5 +76,11 @@ public class RestaurantService {
         if(restaurantWaiting.size() == 0){
             throw new NoWaitingToAccept("수락할 웨이팅이 없습니다.");
         }
+    }
+
+    public Restaurant findRestaurantByHostId(Long hostId){
+        Restaurant restaurant = restaurantRepository.findByHost_Id(hostId)
+                .orElseThrow(GuestNotRestaurantHost::new);
+        return restaurant;
     }
 }
