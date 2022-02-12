@@ -12,4 +12,8 @@ public class JwtAuthentication {
         this.id = id;
         this.token = token;
     }
+
+    public String getToken() {
+        return token;
+    }
 }
