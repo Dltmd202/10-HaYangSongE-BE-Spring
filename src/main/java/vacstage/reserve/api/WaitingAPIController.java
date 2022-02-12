@@ -2,9 +2,7 @@ package vacstage.reserve.api;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import vacstage.reserve.dto.api.ApiResponse;
 import vacstage.reserve.dto.waiting.RegisterWaitingDto;
 import vacstage.reserve.dto.waiting.WaitingDto;
@@ -32,5 +30,14 @@ public class WaitingAPIController {
         Long waitingId = waitingService.waiting(registerWaitingDto);
         WaitingDto waitingDto = waitingRepositorySupport.findWaitingDto(waitingId);
         return ResponseEntity.ok(ApiResponse.of(waitingDto));
+    }
+
+    @GetMapping(value = "/waiting/{id}")
+    public ResponseEntity<ApiResponse<WaitingDto>> lookUpWaiting(
+            @PathVariable Long id
+    ){
+        return ResponseEntity.ok(ApiResponse.of(
+                waitingRepositorySupport.findWaitingDto(id)
+        ));
     }
 }

@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import vacstage.reserve.domain.guest.Guest;
 import vacstage.reserve.domain.guest.GuestSearch;
@@ -63,6 +64,14 @@ public class GuestAPIController {
                 guest.getAuthorities()
         ));
 
+    }
+
+    @GetMapping("/guest/mypage")
+    public ResponseEntity<ApiResponse<GuestDto>> myPage(
+            @AuthenticationPrincipal JwtAuthentication token
+    ){
+        Guest guest = guestService.findOne(token.getId());
+        return ResponseEntity.ok(ApiResponse.of(new GuestDto(guest)));
     }
 
     @GetMapping("/guest")
