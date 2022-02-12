@@ -119,6 +119,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET,"/guest/**").authenticated()
                 .antMatchers("/restaurant/**").authenticated()
                 .antMatchers("/profile").permitAll()
+                .anyRequest().permitAll()
 
                 .and()
                 .formLogin()
