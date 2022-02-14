@@ -37,16 +37,36 @@ public class RestaurantRepositorySupport {
                 .getResultList();
     }
 
-    private List<RestaurantDto> findBaseRestaurantDtos(int offset, int limit){
-        return em.createQuery(
-                        "select new vacstage.reserve.dto.restaurant.RestaurantDto(" +
-                                "r.id, r.name, r.phoneNumber, r.branchName, r.district, r.detailAddress, r.waitingAverage," +
-                                "r.restaurantPhoto, r.vaccineCondition, r.totalSeat, r.remainSeat, h)" +
-                                " from Restaurant r" +
-                                " join r.host h ", RestaurantDto.class)
-                .setFirstResult(offset)
-                .setMaxResults(limit)
-                .getResultList();
+    private List<RestaurantDto> findBaseRestaurantDtos(int offset, int limit, String key, String district){
+        String query = "select new vacstage.reserve.dto.restaurant.RestaurantDto(" +
+                "r.id, r.name, r.phoneNumber, r.branchName, r.district, r.detailAddress, r.waitingAverage," +
+                "r.restaurantPhoto, r.vaccineCondition, r.totalSeat, r.remainSeat, h)" +
+                " from Restaurant r" +
+                " join r.host h " +
+                " where r.district in ";
+
+        if(district.equals("SE")){
+            query += " (vacstage.reserve.constant.District.SE) ";
+        } else if(district.equals("WN")){
+            query += " (vacstage.reserve.constant.District.WN) ";
+        } else {
+            query += " (vacstage.reserve.constant.District.WN, vacstage.reserve.constant.District.SE) ";
+        }
+        if(!key.equals("")){
+            query += " and r.name like :key";
+            return em.createQuery(
+                            query, RestaurantDto.class)
+                    .setParameter("key", "%" + key + "%")
+                    .setFirstResult(offset)
+                    .setMaxResults(limit)
+                    .getResultList();
+        } else {
+            return em.createQuery(
+                            query, RestaurantDto.class)
+                    .setFirstResult(offset)
+                    .setMaxResults(limit)
+                    .getResultList();
+        }
     }
 
     private List<MenuDto> findMenu(Long restaurantId){
@@ -126,8 +146,8 @@ public class RestaurantRepositorySupport {
         return baseRestaurantDtos;
     }
 
-    public List<RestaurantDto> findRestaurantDtos(int offset, int limit){
-        List<RestaurantDto> baseRestaurantDtos = findBaseRestaurantDtos(offset, limit);
+    public List<RestaurantDto> findRestaurantDtos(int offset, int limit, String key, String district){
+        List<RestaurantDto> baseRestaurantDtos = findBaseRestaurantDtos(offset, limit, key, district);
         baseRestaurantDtos.forEach(r -> {
             r.setMenus(findMenu(r.getId()));
             r.setAcceptation(findAcceptation(r.getId()));
