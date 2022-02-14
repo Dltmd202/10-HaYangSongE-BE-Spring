@@ -1,4 +1,4 @@
-package vacstage.reserve.dto.api;
+package vacstage.reserve.dto.wrapper;
 
 import lombok.Getter;
 
