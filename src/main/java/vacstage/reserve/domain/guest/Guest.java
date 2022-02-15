@@ -23,10 +23,7 @@ import java.util.List;
 @AllArgsConstructor
 public class Guest {
 
-    @Id @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "guest_seq_generator"
-    )
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "guest_id")
     private Long id;
 
