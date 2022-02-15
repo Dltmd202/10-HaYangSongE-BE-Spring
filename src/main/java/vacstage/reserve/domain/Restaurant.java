@@ -14,10 +14,7 @@ import java.util.List;
 @Getter @Setter
 public class Restaurant {
 
-    @Id @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "restaurant_seq_generator"
-    )
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "restaurant_id")
     private Long id;
 

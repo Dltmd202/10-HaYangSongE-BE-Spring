@@ -18,10 +18,7 @@ import static javax.persistence.FetchType.LAZY;
 @Getter @Setter
 public class Waiting {
 
-    @Id @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "guest_seq_generator"
-    )
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "waiting_id")
     private Long id;
 
