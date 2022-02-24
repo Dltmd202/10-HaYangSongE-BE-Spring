@@ -27,7 +27,7 @@ public class RestaurantRepositorySupport {
                 .getSingleResult();
     }
 
-    private List<RestaurantDto> findBaseRestaurantDtos(){
+    private List<RestaurantDto> findQueryRestaurantDtos(){
         return em.createQuery(
                         "select new vacstage.reserve.dto.restaurant.RestaurantDto(" +
                                 "r.id, r.name, r.phoneNumber, r.branchName, r.district, r.detailAddress, r.waitingAverage," +
@@ -37,12 +37,9 @@ public class RestaurantRepositorySupport {
                 .getResultList();
     }
 
-    private List<RestaurantDto> findBaseRestaurantDtos(int offset, int limit, String key, String district){
-        String query = "select new vacstage.reserve.dto.restaurant.RestaurantDto(" +
-                "r.id, r.name, r.phoneNumber, r.branchName, r.district, r.detailAddress, r.waitingAverage," +
-                "r.restaurantPhoto, r.vaccineCondition, r.totalSeat, r.remainSeat, h)" +
+    private List<RestaurantListDto> findQueryRestaurantDtos(int offset, int limit, String key, String district){
+        String query = "select new vacstage.reserve.dto.restaurant.RestaurantListDto(r)" +
                 " from Restaurant r" +
-                " join r.host h " +
                 " where r.district in ";
 
         if(district.equals("SE")){
@@ -55,14 +52,14 @@ public class RestaurantRepositorySupport {
         if(!key.equals("")){
             query += " and r.name like :key";
             return em.createQuery(
-                            query, RestaurantDto.class)
+                            query, RestaurantListDto.class)
                     .setParameter("key", "%" + key + "%")
                     .setFirstResult(offset)
                     .setMaxResults(limit)
                     .getResultList();
         } else {
             return em.createQuery(
-                            query, RestaurantDto.class)
+                            query, RestaurantListDto.class)
                     .setFirstResult(offset)
                     .setMaxResults(limit)
                     .getResultList();
@@ -137,7 +134,7 @@ public class RestaurantRepositorySupport {
     }
 
     public List<RestaurantDto> findRestaurantDtos(){
-        List<RestaurantDto> baseRestaurantDtos = findBaseRestaurantDtos();
+        List<RestaurantDto> baseRestaurantDtos = findQueryRestaurantDtos();
         baseRestaurantDtos.forEach(r -> {
             r.setMenus(findMenu(r.getId()));
             r.setAcceptation(findAcceptation(r.getId()));
@@ -146,14 +143,9 @@ public class RestaurantRepositorySupport {
         return baseRestaurantDtos;
     }
 
-    public List<RestaurantDto> findRestaurantDtos(int offset, int limit, String key, String district){
-        List<RestaurantDto> baseRestaurantDtos = findBaseRestaurantDtos(offset, limit, key, district);
-        baseRestaurantDtos.forEach(r -> {
-            r.setMenus(findMenu(r.getId()));
-            r.setAcceptation(findAcceptation(r.getId()));
-            r.setWaitings(findWaitingDtos(r.getId()));
-        });
+
+    public List<RestaurantListDto> findRestaurantListDtos(int offset, int limit, String key, String district) {
+        List<RestaurantListDto> baseRestaurantDtos = findQueryRestaurantDtos(offset, limit, key, district);
         return baseRestaurantDtos;
     }
-
 }
