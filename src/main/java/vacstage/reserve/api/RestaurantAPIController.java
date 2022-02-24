@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import vacstage.reserve.domain.Restaurant;
 import vacstage.reserve.domain.guest.Guest;
 import vacstage.reserve.dto.restaurant.RestaurantDto;
+import vacstage.reserve.dto.restaurant.RestaurantListDto;
 import vacstage.reserve.dto.wrapper.ApiResponse;
 import vacstage.reserve.dto.wrapper.RestaurantApiListResponse;
 import vacstage.reserve.jwt.JwtAuthentication;
@@ -40,14 +41,14 @@ public class RestaurantAPIController {
     @Operation(summary = "식당 리스트 조회")
     @GetMapping(value = "/restaurant",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestaurantApiListResponse<List<RestaurantDto>>> findAll(
+    public ResponseEntity<RestaurantApiListResponse<List<RestaurantListDto>>> findAll(
         @RequestParam(value = "district", defaultValue = "") String district,
         @RequestParam(value = "key", defaultValue = "") String key,
         @RequestParam(value = "offset", defaultValue = "0") int offset,
         @RequestParam(value = "limit", defaultValue = "100") int limit){
         return ResponseEntity.ok(
                 RestaurantApiListResponse.of(
-                        restaurantRepositorySupport.findRestaurantDtos(offset, limit, key, district)
+                        restaurantRepositorySupport.findRestaurantListDtos(offset, limit, key, district)
                                 ,offset
                                 ,limit
                                 ,key
