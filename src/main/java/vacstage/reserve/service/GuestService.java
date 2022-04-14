@@ -10,7 +10,6 @@ import vacstage.reserve.dto.guest.CreateGuestRequest;
 import vacstage.reserve.dto.guest.GuestDto;
 import vacstage.reserve.exception.NotFoundGuestException;
 import vacstage.reserve.repository.GuestRepository;
-import vacstage.reserve.repository.GuestRepositorySupport;
 
 import java.util.List;
 
@@ -20,8 +19,6 @@ import java.util.List;
 public class GuestService {
 
     private final GuestRepository guestRepository;
-
-    private final GuestRepositorySupport guestRepositorySupport;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -58,7 +55,7 @@ public class GuestService {
     private void validateDuplicatedGuest(Guest guest) throws IllegalStateException {
         GuestSearch guestSearch = new GuestSearch();
         guestSearch.setUsername(guest.getUsername());
-        List<Guest> findGuests = guestRepositorySupport.findAll(guestSearch);
+        List<Guest> findGuests = guestRepository.findAll(guestSearch);
         if(!findGuests.isEmpty()){
             throw new IllegalStateException("이미 존재하는 회원입니다.");
         }
@@ -70,11 +67,11 @@ public class GuestService {
     }
 
     public List<Guest> findGuests(GuestSearch guestSearch) {
-        return guestRepositorySupport.findAll(guestSearch);
+        return guestRepository.findAll(guestSearch);
     }
 
     public List<Guest> findGuests(GuestSearch guestSearch, int offset, int limit) {
-        return guestRepositorySupport.findAll(guestSearch, offset, limit);
+        return guestRepository.findAll(guestSearch, offset, limit);
     }
 
     @Transactional
