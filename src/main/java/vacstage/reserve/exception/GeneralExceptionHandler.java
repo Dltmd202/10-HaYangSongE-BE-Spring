@@ -49,7 +49,7 @@ public class GeneralExceptionHandler {
             IllegalStateException.class,
             GuestAlreadyHaveWaiting.class,
             NotAcceptableVaccineStep.class,
-            NotFoundWaitingException.class
+            MethodArgumentNotValidException.class
     })
     public ResponseEntity<?> handleBadRequestException(Exception e){
         log.debug("Bad request exception occurred : {}", e.getMessage(), e);
