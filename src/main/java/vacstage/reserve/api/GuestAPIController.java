@@ -41,7 +41,6 @@ public class GuestAPIController {
         Long guestId = guestService.joinAPI(request);
         Guest guest = guestService.findOne(guestId);
         CreateGuestResponse createGuestResponse = new CreateGuestResponse(guest);
-        System.out.println("fuck!!!");
         return ResponseEntity.ok(ApiResponse.of(createGuestResponse));
     }
 
