@@ -17,18 +17,9 @@ import static vacstage.reserve.domain.guest.QGuest.guest;
 
 @Repository
 @RequiredArgsConstructor
-public class GuestRepositorySupport {
+public class GuestRepositoryCustomImpl implements GuestRepositoryCustom{
 
     private final EntityManager em;
-
-    public void save(Guest guest){
-        em.persist(guest);
-    }
-
-    public Guest findById(Long id){
-        return em.find(Guest.class, id);
-    }
-
 
     public List<Guest> findAll(GuestSearch guestSearch) {
         QGuest quest = guest;

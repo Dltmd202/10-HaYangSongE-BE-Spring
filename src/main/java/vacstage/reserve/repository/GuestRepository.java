@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 
-public interface GuestRepository extends JpaRepository<Guest, Long> {
+public interface GuestRepository extends JpaRepository<Guest, Long>, GuestRepositoryCustom{
 
     List<Guest> findByUsernameAndFullName(String username, String fullname);
 

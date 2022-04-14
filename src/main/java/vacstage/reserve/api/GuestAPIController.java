@@ -40,7 +40,9 @@ public class GuestAPIController {
             @RequestBody @Valid CreateGuestRequest request){
         Long guestId = guestService.joinAPI(request);
         Guest guest = guestService.findOne(guestId);
-        return ResponseEntity.ok(ApiResponse.of(new CreateGuestResponse(guest)));
+        CreateGuestResponse createGuestResponse = new CreateGuestResponse(guest);
+        System.out.println("fuck!!!");
+        return ResponseEntity.ok(ApiResponse.of(createGuestResponse));
     }
 
     @Operation(summary = "JWT 토큰 발행 로그인")
