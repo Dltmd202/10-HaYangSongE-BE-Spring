@@ -6,8 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import vacstage.reserve.dto.waiting.RegisterWaitingDto;
 import vacstage.reserve.dto.waiting.WaitingDto;
 import vacstage.reserve.dto.wrapper.ApiResponse;
-import vacstage.reserve.repository.RestaurantRepository;
-import vacstage.reserve.repository.RestaurantRepositorySupport;
 import vacstage.reserve.repository.WaitingRepositorySupport;
 import vacstage.reserve.service.WaitingService;
 
@@ -19,8 +17,6 @@ public class WaitingAPIController {
 
     private final WaitingService waitingService;
     private final WaitingRepositorySupport waitingRepositorySupport;
-    private final RestaurantRepository restaurantRepository;
-    private final RestaurantRepositorySupport restaurantRepositorySupport;
 
 
     @PostMapping(value = "/waiting")

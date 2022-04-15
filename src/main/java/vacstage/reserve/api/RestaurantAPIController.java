@@ -13,7 +13,6 @@ import vacstage.reserve.dto.restaurant.RestaurantListDto;
 import vacstage.reserve.dto.wrapper.ApiResponse;
 import vacstage.reserve.dto.wrapper.RestaurantApiListResponse;
 import vacstage.reserve.jwt.JwtAuthentication;
-import vacstage.reserve.repository.RestaurantRepository;
 import vacstage.reserve.repository.RestaurantRepositorySupport;
 import vacstage.reserve.service.GuestService;
 import vacstage.reserve.service.RestaurantService;
@@ -24,7 +23,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RestaurantAPIController {
 
-    private final RestaurantRepository restaurantRepository;
     private final RestaurantRepositorySupport restaurantRepositorySupport;
     private final RestaurantService restaurantService;
     private final GuestService guestService;
